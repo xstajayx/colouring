@@ -56,6 +56,67 @@ const templates = [
       </g>
     </svg>`,
   },
+  {
+    name: "Apple Duo",
+    svg: `<?xml version="1.0" encoding="UTF-8"?>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400">
+      <g fill="none" stroke="#2c2c38" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M190 120c20-30 40-30 60 0" />
+        <path d="M310 120c20-30 40-30 60 0" />
+        <path d="M250 110c-10-30 10-50 40-60" />
+        <path d="M270 90c20 10 40 0 50-20" />
+        <path d="M140 210c0-60 50-110 110-110s110 50 110 110c0 90-60 150-110 150s-110-60-110-150z" />
+        <path d="M260 170c-10-20-30-30-50-30" />
+        <path d="M240 170c10-20 30-30 50-30" />
+        <path d="M320 190c30-20 70-20 90 10 20 30 10 70-20 90-30 20-70 0-80-40" />
+        <path d="M180 250c-30-20-70-20-90 10-20 30-10 70 20 90 30 20 70 0 80-40" />
+      </g>
+    </svg>`,
+  },
+  {
+    name: "Citrus Trio",
+    svg: `<?xml version="1.0" encoding="UTF-8"?>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400">
+      <g fill="none" stroke="#2c2c38" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="170" cy="220" r="80" />
+        <circle cx="250" cy="170" r="70" />
+        <circle cx="330" cy="240" r="85" />
+        <path d="M250 90c-10-30 10-50 40-60" />
+        <path d="M230 110c-30-10-50-30-60-60" />
+        <path d="M170 220l30-30" />
+        <path d="M170 220l30 30" />
+        <path d="M170 220l-30-30" />
+        <path d="M170 220l-30 30" />
+        <path d="M250 170l25-25" />
+        <path d="M250 170l25 25" />
+        <path d="M250 170l-25-25" />
+        <path d="M250 170l-25 25" />
+        <path d="M330 240l30-30" />
+        <path d="M330 240l30 30" />
+        <path d="M330 240l-30-30" />
+        <path d="M330 240l-30 30" />
+      </g>
+    </svg>`,
+  },
+  {
+    name: "Fruit Basket",
+    svg: `<?xml version="1.0" encoding="UTF-8"?>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400">
+      <g fill="none" stroke="#2c2c38" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M120 170c30-50 80-80 130-80s100 30 130 80" />
+        <path d="M90 180h320" />
+        <path d="M120 180l40 120h180l40-120" />
+        <path d="M180 140c-10-30 10-50 40-60" />
+        <path d="M250 150c-20-40 0-70 50-80" />
+        <circle cx="200" cy="200" r="40" />
+        <circle cx="260" cy="210" r="35" />
+        <path d="M300 190c0 30 20 50 50 50 20 0 40-10 50-30-10-30-40-50-70-50s-30 20-30 30z" />
+        <path d="M200 200l-15-20" />
+        <path d="M260 210l10-20" />
+        <path d="M330 190c10-20 30-30 50-30" />
+      </g>
+    </svg>`,
+  },
 ];
 
 const palette = [
