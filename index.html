@@ -156,7 +156,7 @@
       border: 3px solid #555;
     }
 
-    .tool-btn, .page-btn, .size-btn, .brush-btn, .sticker-btn, .category-btn {
+    .tool-btn, .page-btn, .size-btn, .brush-btn, .sticker-btn, .category-btn, .shape-btn {
       border: none;
       padding: 6px 12px;
       border-radius: 12px;
@@ -175,7 +175,8 @@
     .size-btn:hover,
     .brush-btn:hover,
     .sticker-btn:hover,
-    .category-btn:hover {
+    .category-btn:hover,
+    .shape-btn:hover {
       transform: translateY(-1px);
       box-shadow: 0 3px 8px rgba(0,0,0,0.12);
     }
@@ -197,7 +198,8 @@
     .size-btn.active,
     .brush-btn.active,
     .sticker-btn.active,
-    .category-btn.active {
+    .category-btn.active,
+    .shape-btn.active {
       background: var(--accent-soft);
       color: var(--accent);
     }
@@ -315,10 +317,10 @@
     <header class="hero">
       <div>
         <span class="badge">🎨 Creative play</span>
-        <h1>Kids Coloring Book</h1>
-        <p>Pick a category, choose a page, and start coloring with fun brushes.</p>
+        <h1>Coloring Studio</h1>
+        <p>Pick a category, choose a page, and start coloring with pro-level tools.</p>
       </div>
-      <div class="helper-note">Tip: Save your masterpiece when you're done!</div>
+      <div class="helper-note">Tip: Try line tools and fill to speed up shading!</div>
     </header>
 
     <div class="workspace">
@@ -333,6 +335,7 @@
           <button class="category-btn" data-category="vehicles">🚗 Vehicles</button>
           <button class="category-btn" data-category="shapes">🔷 Shapes</button>
           <button class="category-btn" data-category="scenes">🌈 Scenes</button>
+          <button class="category-btn" data-category="teens">🧑‍🎤 Teens</button>
           <button class="category-btn" data-category="blank">📝 Blank</button>
         </div>
         <div id="pages" class="page-grid">
@@ -344,6 +347,10 @@
           <button class="page-btn" data-page="shapesHard" data-category="shapes">🧩 Shapes (Challenge)</button>
           <button class="page-btn" data-page="houseScene" data-category="scenes">🏡 House Scene</button>
           <button class="page-btn" data-page="rainbowScene" data-category="scenes">🌈 Rainbow Scene</button>
+          <button class="page-btn" data-page="mandalaVibes" data-category="teens">🌀 Mandala Vibes</button>
+          <button class="page-btn" data-page="cityNight" data-category="teens">🌃 City Night</button>
+          <button class="page-btn" data-page="headphones" data-category="teens">🎧 Headphones</button>
+          <button class="page-btn" data-page="skateboard" data-category="teens">🛹 Skateboard</button>
           <button class="page-btn" data-page="blank" data-category="blank">📝 Blank</button>
         </div>
       </section>
@@ -355,6 +362,9 @@
         </div>
         <div id="toolbar2">
           <button class="tool-btn active" id="penTool">✏️ Draw</button>
+          <button class="tool-btn" id="lineTool">📏 Line</button>
+          <button class="tool-btn" id="shapeTool">🔺 Shapes</button>
+          <button class="tool-btn" id="fillTool">🪣 Fill</button>
           <button class="tool-btn" id="eraserTool">🧽 Eraser</button>
 
           <button class="size-btn active" data-size="4">S</button>
@@ -365,6 +375,10 @@
           <button class="brush-btn" data-brush="dashed">Dashed</button>
           <button class="brush-btn" data-brush="marker">Marker</button>
           <button class="brush-btn" data-brush="fuzzy">Fuzzy</button>
+
+          <button class="shape-btn active" data-shape="rectangle">⬛</button>
+          <button class="shape-btn" data-shape="circle">⚪</button>
+          <button class="shape-btn" data-shape="triangle">🔺</button>
 
           <button class="sticker-btn" data-sticker="⭐">⭐</button>
           <button class="sticker-btn" data-sticker="❤️">❤️</button>
@@ -418,10 +432,13 @@
     let drawing = false;
     let currentColor = "#000000";
     let brushSize = 8;
-    let currentTool = "draw"; // draw, eraser, sticker
+    let currentTool = "draw"; // draw, line, shape, fill, eraser, sticker
     let currentSticker = "⭐";
     let currentBrush = "normal";
     let currentPage = "catEasy";
+    let currentShape = "rectangle";
+    let shapeStart = null;
+    let drawingSnapshot = null;
 
     // --- Helpers: coordinates ---
     function getPos(e) {
@@ -639,6 +656,83 @@
         // sun
         outlineCtx.moveTo(500, 100);
         outlineCtx.arc(500, 100, 40, 0, Math.PI * 2);
+      } else if (page === "mandalaVibes") {
+        // mandala rings
+        outlineCtx.arc(350, 225, 140, 0, Math.PI * 2);
+        outlineCtx.moveTo(350, 225);
+        outlineCtx.arc(350, 225, 110, 0, Math.PI * 2);
+        outlineCtx.moveTo(350, 225);
+        outlineCtx.arc(350, 225, 80, 0, Math.PI * 2);
+        outlineCtx.moveTo(350, 225);
+        outlineCtx.arc(350, 225, 50, 0, Math.PI * 2);
+        // petals
+        for (let i = 0; i < 12; i++) {
+          const angle = (Math.PI * 2 * i) / 12;
+          const x = 350 + Math.cos(angle) * 140;
+          const y = 225 + Math.sin(angle) * 140;
+          outlineCtx.moveTo(350, 225);
+          outlineCtx.lineTo(x, y);
+          outlineCtx.moveTo(x, y);
+          outlineCtx.arc(x, y, 18, 0, Math.PI * 2);
+        }
+      } else if (page === "cityNight") {
+        // skyline
+        outlineCtx.rect(80, 180, 90, 190);
+        outlineCtx.rect(190, 140, 80, 230);
+        outlineCtx.rect(290, 200, 110, 170);
+        outlineCtx.rect(420, 120, 100, 250);
+        outlineCtx.rect(540, 220, 80, 150);
+        // windows
+        for (let x = 100; x <= 150; x += 25) {
+          for (let y = 200; y <= 330; y += 40) {
+            outlineCtx.rect(x, y, 18, 18);
+          }
+        }
+        for (let x = 210; x <= 250; x += 30) {
+          for (let y = 160; y <= 330; y += 45) {
+            outlineCtx.rect(x, y, 16, 20);
+          }
+        }
+        // moon + stars
+        outlineCtx.moveTo(560, 90);
+        outlineCtx.arc(540, 90, 30, 0, Math.PI * 2);
+        outlineCtx.moveTo(140, 90);
+        outlineCtx.arc(140, 90, 6, 0, Math.PI * 2);
+        outlineCtx.moveTo(240, 70);
+        outlineCtx.arc(240, 70, 5, 0, Math.PI * 2);
+        outlineCtx.moveTo(320, 90);
+        outlineCtx.arc(320, 90, 4, 0, Math.PI * 2);
+        outlineCtx.moveTo(420, 70);
+        outlineCtx.arc(420, 70, 5, 0, Math.PI * 2);
+      } else if (page === "headphones") {
+        // headband
+        outlineCtx.moveTo(200, 220);
+        outlineCtx.arc(350, 220, 150, Math.PI, 2 * Math.PI);
+        outlineCtx.moveTo(240, 220);
+        outlineCtx.arc(350, 220, 110, Math.PI, 2 * Math.PI);
+        // ear pads
+        outlineCtx.roundRect(190, 210, 60, 140, 20);
+        outlineCtx.roundRect(450, 210, 60, 140, 20);
+        // speaker detail
+        outlineCtx.moveTo(220, 250);
+        outlineCtx.arc(220, 280, 18, 0, Math.PI * 2);
+        outlineCtx.moveTo(480, 250);
+        outlineCtx.arc(480, 280, 18, 0, Math.PI * 2);
+        // cord
+        outlineCtx.moveTo(350, 360);
+        outlineCtx.quadraticCurveTo(370, 400, 400, 420);
+      } else if (page === "skateboard") {
+        outlineCtx.roundRect(160, 210, 380, 80, 40);
+        outlineCtx.moveTo(220, 290);
+        outlineCtx.arc(220, 310, 30, 0, Math.PI * 2);
+        outlineCtx.moveTo(480, 290);
+        outlineCtx.arc(480, 310, 30, 0, Math.PI * 2);
+        outlineCtx.moveTo(220, 310);
+        outlineCtx.arc(220, 310, 12, 0, Math.PI * 2);
+        outlineCtx.moveTo(480, 310);
+        outlineCtx.arc(480, 310, 12, 0, Math.PI * 2);
+        outlineCtx.moveTo(250, 250);
+        outlineCtx.lineTo(450, 250);
       } else if (page === "blank") {
         // no outline, just white background already filled
       }
@@ -669,7 +763,17 @@
         return;
       }
 
+      if (currentTool === "fill") {
+        floodFill(Math.floor(pos.x), Math.floor(pos.y), currentColor);
+        return;
+      }
+
       drawing = true;
+      shapeStart = pos;
+      drawingSnapshot =
+        currentTool === "line" || currentTool === "shape"
+          ? drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height)
+          : null;
       setupBrush();
       drawCtx.beginPath();
       drawCtx.moveTo(pos.x, pos.y);
@@ -702,11 +806,126 @@
       }
     }
 
+    function renderShape(pos, finalize = false) {
+      if (!shapeStart) return;
+      setupBrush();
+      drawCtx.beginPath();
+
+      if (currentTool === "line") {
+        drawCtx.moveTo(shapeStart.x, shapeStart.y);
+        drawCtx.lineTo(pos.x, pos.y);
+      } else if (currentShape === "rectangle") {
+        const width = pos.x - shapeStart.x;
+        const height = pos.y - shapeStart.y;
+        drawCtx.rect(shapeStart.x, shapeStart.y, width, height);
+      } else if (currentShape === "circle") {
+        const radius = Math.hypot(pos.x - shapeStart.x, pos.y - shapeStart.y);
+        drawCtx.arc(shapeStart.x, shapeStart.y, radius, 0, Math.PI * 2);
+      } else if (currentShape === "triangle") {
+        const midpointX = (shapeStart.x + pos.x) / 2;
+        drawCtx.moveTo(midpointX, shapeStart.y);
+        drawCtx.lineTo(pos.x, pos.y);
+        drawCtx.lineTo(shapeStart.x, pos.y);
+        drawCtx.closePath();
+      }
+
+      drawCtx.stroke();
+      if (finalize) {
+        drawCtx.closePath();
+      }
+    }
+
+    function hexToRgb(hex) {
+      const normalized = hex.replace("#", "");
+      const bigint = parseInt(normalized.length === 3
+        ? normalized.split("").map((c) => c + c).join("")
+        : normalized, 16);
+      return {
+        r: (bigint >> 16) & 255,
+        g: (bigint >> 8) & 255,
+        b: bigint & 255
+      };
+    }
+
+    function colorsMatch(data, index, target, tolerance = 16) {
+      return (
+        Math.abs(data[index] - target.r) <= tolerance &&
+        Math.abs(data[index + 1] - target.g) <= tolerance &&
+        Math.abs(data[index + 2] - target.b) <= tolerance
+      );
+    }
+
+    function floodFill(startX, startY, hexColor) {
+      const width = drawCanvas.width;
+      const height = drawCanvas.height;
+
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = width;
+      tempCanvas.height = height;
+      const tempCtx = tempCanvas.getContext("2d");
+      tempCtx.drawImage(outlineCanvas, 0, 0);
+      tempCtx.drawImage(drawCanvas, 0, 0);
+
+      const merged = tempCtx.getImageData(0, 0, width, height);
+      const drawData = drawCtx.getImageData(0, 0, width, height);
+      const fill = hexToRgb(hexColor);
+
+      const startIndex = (startY * width + startX) * 4;
+      const target = {
+        r: merged.data[startIndex],
+        g: merged.data[startIndex + 1],
+        b: merged.data[startIndex + 2],
+      };
+
+      if (colorsMatch(merged.data, startIndex, fill)) {
+        return;
+      }
+
+      const stack = [{ x: startX, y: startY }];
+      const tolerance = 18;
+
+      while (stack.length) {
+        const { x, y } = stack.pop();
+        if (x < 0 || y < 0 || x >= width || y >= height) {
+          continue;
+        }
+        const idx = (y * width + x) * 4;
+        if (!colorsMatch(merged.data, idx, target, tolerance)) {
+          continue;
+        }
+
+        merged.data[idx] = fill.r;
+        merged.data[idx + 1] = fill.g;
+        merged.data[idx + 2] = fill.b;
+        merged.data[idx + 3] = 255;
+
+        drawData.data[idx] = fill.r;
+        drawData.data[idx + 1] = fill.g;
+        drawData.data[idx + 2] = fill.b;
+        drawData.data[idx + 3] = 255;
+
+        stack.push({ x: x + 1, y });
+        stack.push({ x: x - 1, y });
+        stack.push({ x, y: y + 1 });
+        stack.push({ x, y: y - 1 });
+      }
+
+      drawCtx.putImageData(drawData, 0, 0);
+    }
+
     function draw(e) {
       e.preventDefault();
       if (!drawing) return;
 
       const pos = getPos(e);
+
+      if (currentTool === "line" || currentTool === "shape") {
+        if (drawingSnapshot) {
+          drawCtx.putImageData(drawingSnapshot, 0, 0);
+          renderShape(pos);
+        }
+        return;
+      }
 
       if (currentBrush === "fuzzy" && currentTool !== "eraser") {
         // fuzzy effect: main line + two light offset lines
@@ -743,7 +962,14 @@
 
     function endDraw(e) {
       if (e) e.preventDefault();
+      if (drawing && (currentTool === "line" || currentTool === "shape")) {
+        const pos = getPos(e);
+        drawCtx.putImageData(drawingSnapshot, 0, 0);
+        renderShape(pos, true);
+      }
       drawing = false;
+      shapeStart = null;
+      drawingSnapshot = null;
       drawCtx.beginPath();
     }
 
@@ -755,10 +981,9 @@
     colorBtns.forEach(btn => {
       btn.addEventListener("click", () => {
         currentColor = btn.dataset.color;
-        currentTool = "draw";
-        document.getElementById("penTool").classList.add("active");
-        document.getElementById("eraserTool").classList.remove("active");
-        document.getElementById("stickerTool").classList.remove("active");
+        if (currentTool === "eraser") {
+          setActiveTool("draw");
+        }
         colorBtns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         document.getElementById("colorPicker").value = currentColor;
@@ -768,10 +993,9 @@
     const colorPicker = document.getElementById("colorPicker");
     colorPicker.addEventListener("input", (e) => {
       currentColor = e.target.value;
-      currentTool = "draw";
-      document.getElementById("penTool").classList.add("active");
-      document.getElementById("eraserTool").classList.remove("active");
-      document.getElementById("stickerTool").classList.remove("active");
+      if (currentTool === "eraser") {
+        setActiveTool("draw");
+      }
       colorBtns.forEach(b => b.classList.remove("active"));
     });
 
@@ -787,6 +1011,7 @@
 
     // --- Brush types ---
     const brushBtns = document.querySelectorAll(".brush-btn");
+    const shapeBtns = document.querySelectorAll(".shape-btn");
     brushBtns.forEach(btn => {
       btn.addEventListener("click", () => {
         currentBrush = btn.dataset.brush;
@@ -795,40 +1020,72 @@
       });
     });
 
+    shapeBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentShape = btn.dataset.shape;
+        shapeBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        setActiveTool("shape");
+      });
+    });
+
     // --- Tools ---
     const penTool = document.getElementById("penTool");
+    const lineTool = document.getElementById("lineTool");
+    const shapeTool = document.getElementById("shapeTool");
+    const fillTool = document.getElementById("fillTool");
     const eraserTool = document.getElementById("eraserTool");
     const stickerTool = document.getElementById("stickerTool");
     const stickerBtns = document.querySelectorAll(".sticker-btn");
 
+    const toolButtons = [penTool, lineTool, shapeTool, fillTool, eraserTool, stickerTool];
+
+    function setActiveTool(tool) {
+      currentTool = tool;
+      toolButtons.forEach((btn) => btn.classList.remove("active"));
+      if (tool === "draw") {
+        penTool.classList.add("active");
+      } else if (tool === "line") {
+        lineTool.classList.add("active");
+      } else if (tool === "shape") {
+        shapeTool.classList.add("active");
+      } else if (tool === "fill") {
+        fillTool.classList.add("active");
+      } else if (tool === "eraser") {
+        eraserTool.classList.add("active");
+      } else if (tool === "sticker") {
+        stickerTool.classList.add("active");
+      }
+    }
+
     penTool.addEventListener("click", () => {
-      currentTool = "draw";
-      penTool.classList.add("active");
-      eraserTool.classList.remove("active");
-      stickerTool.classList.remove("active");
+      setActiveTool("draw");
+    });
+
+    lineTool.addEventListener("click", () => {
+      setActiveTool("line");
+    });
+
+    shapeTool.addEventListener("click", () => {
+      setActiveTool("shape");
+    });
+
+    fillTool.addEventListener("click", () => {
+      setActiveTool("fill");
     });
 
     eraserTool.addEventListener("click", () => {
-      currentTool = "eraser";
-      eraserTool.classList.add("active");
-      penTool.classList.remove("active");
-      stickerTool.classList.remove("active");
+      setActiveTool("eraser");
     });
 
     stickerTool.addEventListener("click", () => {
-      currentTool = "sticker";
-      stickerTool.classList.add("active");
-      penTool.classList.remove("active");
-      eraserTool.classList.remove("active");
+      setActiveTool("sticker");
     });
 
     stickerBtns.forEach(btn => {
       btn.addEventListener("click", () => {
         currentSticker = btn.dataset.sticker;
-        currentTool = "sticker";
-        stickerTool.classList.add("active");
-        penTool.classList.remove("active");
-        eraserTool.classList.remove("active");
+        setActiveTool("sticker");
         stickerBtns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
       });
