@@ -213,8 +213,7 @@
       background: white;
       touch-action: none;
       max-width: 100%;
-      width: min(700px, 100%);
-      aspect-ratio: 700 / 450;
+      width: 700px;
       box-shadow: 0 18px 40px rgba(35, 24, 90, 0.12);
     }
 
@@ -223,8 +222,9 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 700px;
+      height: 450px;
+      max-width: 100%;
     }
 
     /* Make canvas responsive */
@@ -232,7 +232,7 @@
       #outlineCanvas,
       #drawCanvas {
         width: 100%;
-        height: 100%;
+        height: auto;
       }
 
       #canvas-stack {
