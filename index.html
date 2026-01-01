@@ -31,8 +31,8 @@
     }
 
     .color-btn {
-      width:34px;
-      height:34px;
+      width:30px;
+      height:30px;
       border-radius:50%;
       border:2px solid #ddd;
       cursor:pointer;
@@ -43,14 +43,21 @@
       border:3px solid #555;
     }
 
-    .tool-btn, .page-btn, .size-btn, .sticker-btn {
+    .tool-btn, .page-btn, .size-btn, .brush-btn, .sticker-btn {
       border:none;
       padding:6px 10px;
       border-radius:12px;
       cursor:pointer;
       background:#ffffff;
       box-shadow:0 1px 3px rgba(0,0,0,0.1);
-      font-size:14px;
+      font-size:13px;
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    .size-btn, .brush-btn {
+      font-size:12px;
     }
 
     .size-btn {
@@ -58,15 +65,13 @@
       height:34px;
       border-radius:50%;
       padding:0;
-      display:flex;
-      align-items:center;
       justify-content:center;
-      font-size:12px;
     }
 
     .tool-btn.active,
     .page-btn.active,
     .size-btn.active,
+    .brush-btn.active,
     .sticker-btn.active {
       background:#cfe7ff;
     }
@@ -89,12 +94,42 @@
       width:100%;
     }
 
-    canvas {
+    #canvas-stack {
+      position:relative;
       border:5px solid #ddd;
       border-radius:12px;
+      overflow:hidden;
       background:white;
       touch-action:none;
       max-width:100%;
+    }
+
+    #outlineCanvas,
+    #drawCanvas {
+      position:absolute;
+      top:0;
+      left:0;
+      width:700px;
+      height:450px;
+      max-width:100%;
+    }
+
+    /* Make canvas responsive */
+    @media (max-width: 750px) {
+      #outlineCanvas,
+      #drawCanvas {
+        width:100%;
+        height:auto;
+      }
+    }
+
+    #colorPicker {
+      padding:0;
+      width:40px;
+      height:34px;
+      border-radius:8px;
+      border:1px solid #ccc;
+      cursor:pointer;
     }
   </style>
 </head>
@@ -103,18 +138,24 @@
 
   <h1>Kids Coloring Book</h1>
 
-  <!-- Colour buttons -->
+  <!-- Colours -->
   <div id="toolbar">
-    <div class="color-btn active" style="background:black" data-color="#000000"></div>
-    <div class="color-btn" style="background:red" data-color="#ff4b4b"></div>
-    <div class="color-btn" style="background:orange" data-color="#ff9a2f"></div>
-    <div class="color-btn" style="background:yellow" data-color="#ffd93b"></div>
-    <div class="color-btn" style="background:green" data-color="#4caf50"></div>
-    <div class="color-btn" style="background:blue" data-color="#2196f3"></div>
-    <div class="color-btn" style="background:purple" data-color="#9c27b0"></div>
+    <div class="color-btn active" style="background:#000000" data-color="#000000"></div>
+    <div class="color-btn" style="background:#ff4b4b" data-color="#ff4b4b"></div>
+    <div class="color-btn" style="background:#ff9a2f" data-color="#ff9a2f"></div>
+    <div class="color-btn" style="background:#ffd93b" data-color="#ffd93b"></div>
+    <div class="color-btn" style="background:#4caf50" data-color="#4caf50"></div>
+    <div class="color-btn" style="background:#2196f3" data-color="#2196f3"></div>
+    <div class="color-btn" style="background:#9c27b0" data-color="#9c27b0"></div>
+    <div class="color-btn" style="background:#ff6ec7" data-color="#ff6ec7"></div>
+    <div class="color-btn" style="background:#8d6e63" data-color="#8d6e63"></div>
+    <label class="tool-btn">
+      🎨
+      <input type="color" id="colorPicker" value="#000000" />
+    </label>
   </div>
 
-  <!-- Tools, brush sizes, stickers, save/clear -->
+  <!-- Tools, brush, size, stickers, save/clear -->
   <div id="toolbar2">
     <button class="tool-btn active" id="penTool">✏️ Draw</button>
     <button class="tool-btn" id="eraserTool">🧽 Eraser</button>
@@ -123,192 +164,373 @@
     <button class="size-btn" data-size="8">M</button>
     <button class="size-btn" data-size="14">L</button>
 
+    <button class="brush-btn active" data-brush="normal">Smooth</button>
+    <button class="brush-btn" data-brush="dashed">Dashed</button>
+    <button class="brush-btn" data-brush="marker">Marker</button>
+    <button class="brush-btn" data-brush="fuzzy">Fuzzy</button>
+
     <button class="sticker-btn" data-sticker="⭐">⭐</button>
     <button class="sticker-btn" data-sticker="❤️">❤️</button>
     <button class="sticker-btn" data-sticker="😊">😊</button>
-
     <button class="tool-btn" id="stickerTool">🎉 Stickers</button>
 
     <button class="tool-btn" id="save">💾 Save</button>
     <button class="tool-btn" id="clear">🧼 Clear</button>
   </div>
 
-  <!-- Pages -->
+  <!-- Pages (categories / difficulty) -->
   <div id="pages">
-    <button class="page-btn active" data-page="animal">🐱 Animal</button>
+    <button class="page-btn active" data-page="catEasy">🐱 Cat (Easy)</button>
+    <button class="page-btn" data-page="dinoHard">🦕 Dino (Hard)</button>
     <button class="page-btn" data-page="car">🚗 Car</button>
-    <button class="page-btn" data-page="shapes">🔺 Shapes</button>
+    <button class="page-btn" data-page="rocket">🚀 Rocket</button>
+    <button class="page-btn" data-page="shapesEasy">🔵 Shapes (Easy)</button>
+    <button class="page-btn" data-page="shapesHard">🧩 Shapes (Challenge)</button>
+    <button class="page-btn" data-page="houseScene">🏡 House Scene</button>
+    <button class="page-btn" data-page="rainbowScene">🌈 Rainbow Scene</button>
     <button class="page-btn" data-page="blank">📝 Blank</button>
   </div>
 
   <div id="canvas-wrapper">
-    <canvas id="canvas" width="700" height="450"></canvas>
+    <div id="canvas-stack">
+      <canvas id="outlineCanvas" width="700" height="450"></canvas>
+      <canvas id="drawCanvas" width="700" height="450"></canvas>
+    </div>
   </div>
 
   <script>
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
+    const outlineCanvas = document.getElementById("outlineCanvas");
+    const drawCanvas = document.getElementById("drawCanvas");
+    const outlineCtx = outlineCanvas.getContext("2d");
+    const drawCtx = drawCanvas.getContext("2d");
 
     let drawing = false;
     let currentColor = "#000000";
     let brushSize = 8;
-    let currentTool = "draw"; // "draw", "eraser", "sticker"
+    let currentTool = "draw"; // draw, eraser, sticker
     let currentSticker = "⭐";
-    let currentPage = "animal";
+    let currentBrush = "normal";
+    let currentPage = "catEasy";
 
-    // --- Helper: get position for mouse/touch ---
+    // --- Helpers: coordinates ---
     function getPos(e) {
-      const rect = canvas.getBoundingClientRect();
+      const rect = drawCanvas.getBoundingClientRect();
       if (e.touches && e.touches[0]) {
         return {
-          x: e.touches[0].clientX - rect.left,
-          y: e.touches[0].clientY - rect.top
+          x: (e.touches[0].clientX - rect.left) * (drawCanvas.width / rect.width),
+          y: (e.touches[0].clientY - rect.top) * (drawCanvas.height / rect.height)
         };
       } else {
         return {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top
+          x: (e.clientX - rect.left) * (drawCanvas.width / rect.width),
+          y: (e.clientY - rect.top) * (drawCanvas.height / rect.height)
         };
       }
     }
 
-    // --- Page outlines (simple line art) ---
+    // --- Draw page outlines on OUTLINE canvas only ---
     function drawOutline(page) {
+      outlineCtx.save();
       // white background
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      outlineCtx.fillStyle = "white";
+      outlineCtx.fillRect(0, 0, outlineCanvas.width, outlineCanvas.height);
 
-      ctx.save();
-      ctx.strokeStyle = "#cccccc";
-      ctx.lineWidth = 3;
-      ctx.lineCap = "round";
-      ctx.beginPath();
+      outlineCtx.strokeStyle = "#bbbbbb";
+      outlineCtx.lineWidth = 3;
+      outlineCtx.lineCap = "round";
+      outlineCtx.lineJoin = "round";
+      outlineCtx.beginPath();
 
-      if (page === "animal") {
-        // simple cat face
-        // head
-        ctx.arc(350, 230, 100, 0, Math.PI * 2);
+      if (page === "catEasy") {
+        // simple cat
+        outlineCtx.arc(350, 230, 100, 0, Math.PI * 2);
         // ears
-        ctx.moveTo(290, 170);
-        ctx.lineTo(270, 130);
-        ctx.lineTo(310, 150);
-        ctx.moveTo(410, 170);
-        ctx.lineTo(430, 130);
-        ctx.lineTo(390, 150);
+        outlineCtx.moveTo(290, 170);
+        outlineCtx.lineTo(270, 130);
+        outlineCtx.lineTo(310, 150);
+        outlineCtx.moveTo(410, 170);
+        outlineCtx.lineTo(430, 130);
+        outlineCtx.lineTo(390, 150);
         // eyes
-        ctx.moveTo(320, 220);
-        ctx.arc(310, 220, 10, 0, Math.PI * 2);
-        ctx.moveTo(390, 220);
-        ctx.arc(380, 220, 10, 0, Math.PI * 2);
-        // nose
-        ctx.moveTo(345, 240);
-        ctx.lineTo(355, 240);
-        ctx.lineTo(350, 250);
-        ctx.closePath();
-        // mouth
-        ctx.moveTo(350, 250);
-        ctx.quadraticCurveTo(335, 265, 320, 270);
-        ctx.moveTo(350, 250);
-        ctx.quadraticCurveTo(365, 265, 380, 270);
+        outlineCtx.moveTo(320, 220);
+        outlineCtx.arc(310, 220, 10, 0, Math.PI * 2);
+        outlineCtx.moveTo(390, 220);
+        outlineCtx.arc(380, 220, 10, 0, Math.PI * 2);
+        // nose + mouth
+        outlineCtx.moveTo(345, 240);
+        outlineCtx.lineTo(355, 240);
+        outlineCtx.lineTo(350, 250);
+        outlineCtx.moveTo(350, 250);
+        outlineCtx.quadraticCurveTo(335, 265, 320, 270);
+        outlineCtx.moveTo(350, 250);
+        outlineCtx.quadraticCurveTo(365, 265, 380, 270);
+      } else if (page === "dinoHard") {
+        // dinosaur body
+        outlineCtx.moveTo(150, 300);
+        outlineCtx.quadraticCurveTo(220, 180, 350, 170);
+        outlineCtx.quadraticCurveTo(500, 180, 560, 300);
+        outlineCtx.lineTo(150, 300);
+        // tail
+        outlineCtx.moveTo(150, 300);
+        outlineCtx.lineTo(90, 260);
+        outlineCtx.lineTo(150, 260);
+        // head
+        outlineCtx.moveTo(350, 170);
+        outlineCtx.lineTo(350, 120);
+        outlineCtx.lineTo(400, 120);
+        outlineCtx.lineTo(410, 150);
+        outlineCtx.lineTo(380, 170);
+        // leg 1
+        outlineCtx.moveTo(260, 300);
+        outlineCtx.lineTo(260, 340);
+        outlineCtx.lineTo(290, 340);
+        outlineCtx.lineTo(290, 300);
+        // leg 2
+        outlineCtx.moveTo(430, 300);
+        outlineCtx.lineTo(430, 340);
+        outlineCtx.lineTo(460, 340);
+        outlineCtx.lineTo(460, 300);
+        // eye
+        outlineCtx.moveTo(365, 140);
+        outlineCtx.arc(360, 140, 6, 0, Math.PI * 2);
+        // plates
+        outlineCtx.moveTo(220, 220);
+        outlineCtx.lineTo(240, 190);
+        outlineCtx.lineTo(260, 220);
+        outlineCtx.moveTo(280, 205);
+        outlineCtx.lineTo(300, 175);
+        outlineCtx.lineTo(320, 205);
+        outlineCtx.moveTo(340, 205);
+        outlineCtx.lineTo(360, 175);
+        outlineCtx.lineTo(380, 205);
       } else if (page === "car") {
-        // simple car shape
-        ctx.moveTo(150, 280);
-        ctx.lineTo(550, 280);
-        ctx.lineTo(580, 250);
-        ctx.lineTo(520, 220);
-        ctx.lineTo(400, 220);
-        ctx.lineTo(360, 180);
-        ctx.lineTo(250, 180);
-        ctx.lineTo(220, 220);
-        ctx.lineTo(150, 230);
-        ctx.closePath();
+        outlineCtx.moveTo(150, 280);
+        outlineCtx.lineTo(550, 280);
+        outlineCtx.lineTo(580, 250);
+        outlineCtx.lineTo(520, 220);
+        outlineCtx.lineTo(400, 220);
+        outlineCtx.lineTo(360, 180);
+        outlineCtx.lineTo(250, 180);
+        outlineCtx.lineTo(220, 220);
+        outlineCtx.lineTo(150, 230);
+        outlineCtx.closePath();
         // wheels
-        ctx.moveTo(230, 280);
-        ctx.arc(230, 280, 40, 0, Math.PI * 2);
-        ctx.moveTo(470, 280);
-        ctx.arc(470, 280, 40, 0, Math.PI * 2);
-        // windows
-        ctx.moveTo(280, 220);
-        ctx.lineTo(350, 190);
-        ctx.lineTo(390, 190);
-        ctx.lineTo(390, 220);
-        ctx.closePath();
-      } else if (page === "shapes") {
-        // big circle
-        ctx.arc(200, 200, 70, 0, Math.PI * 2);
-        // triangle
-        ctx.moveTo(420, 140);
-        ctx.lineTo(520, 260);
-        ctx.lineTo(320, 260);
-        ctx.closePath();
+        outlineCtx.moveTo(230, 280);
+        outlineCtx.arc(230, 280, 40, 0, Math.PI * 2);
+        outlineCtx.moveTo(470, 280);
+        outlineCtx.arc(470, 280, 40, 0, Math.PI * 2);
+        // window
+        outlineCtx.moveTo(280, 220);
+        outlineCtx.lineTo(350, 190);
+        outlineCtx.lineTo(390, 190);
+        outlineCtx.lineTo(390, 220);
+        outlineCtx.closePath();
+      } else if (page === "rocket") {
+        // rocket body
+        outlineCtx.moveTo(350, 100);
+        outlineCtx.lineTo(420, 230);
+        outlineCtx.lineTo(280, 230);
+        outlineCtx.closePath();
+        // window
+        outlineCtx.moveTo(350, 170);
+        outlineCtx.arc(350, 170, 20, 0, Math.PI * 2);
+        // fins
+        outlineCtx.moveTo(280, 230);
+        outlineCtx.lineTo(240, 280);
+        outlineCtx.lineTo(280, 260);
+        outlineCtx.moveTo(420, 230);
+        outlineCtx.lineTo(460, 280);
+        outlineCtx.lineTo(420, 260);
+        // flames
+        outlineCtx.moveTo(280, 230);
+        outlineCtx.quadraticCurveTo(350, 330, 420, 230);
+      } else if (page === "shapesEasy") {
+        // circle
+        outlineCtx.arc(200, 170, 60, 0, Math.PI * 2);
         // square
-        ctx.rect(260, 280, 120, 120);
-        // star (simple)
-        ctx.moveTo(540, 340);
-        ctx.lineTo(555, 380);
-        ctx.lineTo(600, 380);
-        ctx.lineTo(565, 405);
-        ctx.lineTo(580, 445);
-        ctx.lineTo(540, 420);
-        ctx.lineTo(500, 445);
-        ctx.lineTo(515, 405);
-        ctx.lineTo(480, 380);
-        ctx.lineTo(525, 380);
-        ctx.closePath();
+        outlineCtx.rect(320, 110, 120, 120);
+        // triangle
+        outlineCtx.moveTo(520, 230);
+        outlineCtx.lineTo(460, 110);
+        outlineCtx.lineTo(580, 110);
+        outlineCtx.closePath();
+      } else if (page === "shapesHard") {
+        // overlapping shapes
+        outlineCtx.arc(200, 200, 70, 0, Math.PI * 2);
+        outlineCtx.rect(260, 150, 140, 140);
+        outlineCtx.moveTo(420, 260);
+        outlineCtx.lineTo(520, 120);
+        outlineCtx.lineTo(620, 260);
+        outlineCtx.closePath();
+        // star
+        outlineCtx.moveTo(120, 330);
+        outlineCtx.lineTo(140, 370);
+        outlineCtx.lineTo(190, 370);
+        outlineCtx.lineTo(150, 395);
+        outlineCtx.lineTo(170, 435);
+        outlineCtx.lineTo(120, 410);
+        outlineCtx.lineTo(70, 435);
+        outlineCtx.lineTo(90, 395);
+        outlineCtx.lineTo(50, 370);
+        outlineCtx.lineTo(100, 370);
+        outlineCtx.closePath();
+      } else if (page === "houseScene") {
+        // house box
+        outlineCtx.rect(220, 220, 200, 150);
+        // roof
+        outlineCtx.moveTo(220, 220);
+        outlineCtx.lineTo(320, 140);
+        outlineCtx.lineTo(420, 220);
+        outlineCtx.closePath();
+        // door
+        outlineCtx.rect(260, 260, 60, 110);
+        // windows
+        outlineCtx.rect(340, 250, 60, 60);
+        outlineCtx.moveTo(370, 250);
+        outlineCtx.lineTo(370, 310);
+        outlineCtx.moveTo(340, 280);
+        outlineCtx.lineTo(400, 280);
+        // ground
+        outlineCtx.moveTo(80, 370);
+        outlineCtx.lineTo(620, 370);
+        // tree
+        outlineCtx.rect(470, 260, 30, 80);
+        outlineCtx.moveTo(485, 260);
+        outlineCtx.arc(485, 230, 50, 0, Math.PI * 2);
+      } else if (page === "rainbowScene") {
+        // rainbow arcs
+        outlineCtx.moveTo(100, 350);
+        outlineCtx.arc(350, 350, 200, Math.PI, 2 * Math.PI);
+        outlineCtx.moveTo(130, 350);
+        outlineCtx.arc(350, 350, 170, Math.PI, 2 * Math.PI);
+        outlineCtx.moveTo(160, 350);
+        outlineCtx.arc(350, 350, 140, Math.PI, 2 * Math.PI);
+        outlineCtx.moveTo(190, 350);
+        outlineCtx.arc(350, 350, 110, Math.PI, 2 * Math.PI);
+        // clouds
+        outlineCtx.moveTo(120, 350);
+        outlineCtx.arc(110, 350, 25, Math.PI, 0);
+        outlineCtx.arc(140, 350, 25, Math.PI, 0);
+        outlineCtx.arc(170, 350, 25, Math.PI, 0);
+        outlineCtx.moveTo(530, 350);
+        outlineCtx.arc(520, 350, 25, Math.PI, 0);
+        outlineCtx.arc(550, 350, 25, Math.PI, 0);
+        outlineCtx.arc(580, 350, 25, Math.PI, 0);
+        // sun
+        outlineCtx.moveTo(500, 100);
+        outlineCtx.arc(500, 100, 40, 0, Math.PI * 2);
       } else if (page === "blank") {
-        // no outline, just white background
+        // no outline, just white background already filled
       }
 
-      ctx.stroke();
-      ctx.restore();
+      outlineCtx.stroke();
+      outlineCtx.restore();
+
+      // important: clear children’s drawing layer when page changes
+      clearDrawingLayer();
     }
 
-    // --- Drawing / stickers ---
+    function clearDrawingLayer() {
+      drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+    }
+
+    // --- Drawing & stickers on DRAW canvas only ---
     function startDraw(e) {
       e.preventDefault();
       const pos = getPos(e);
 
       if (currentTool === "sticker") {
-        ctx.save();
-        ctx.font = "48px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(currentSticker, pos.x, pos.y);
-        ctx.restore();
+        drawCtx.save();
+        drawCtx.font = "48px Arial";
+        drawCtx.textAlign = "center";
+        drawCtx.textBaseline = "middle";
+        drawCtx.fillText(currentSticker, pos.x, pos.y);
+        drawCtx.restore();
         return;
       }
 
       drawing = true;
-      ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
+      setupBrush();
+      drawCtx.beginPath();
+      drawCtx.moveTo(pos.x, pos.y);
       draw(e);
+    }
+
+    function setupBrush() {
+      drawCtx.setLineDash([]);
+      drawCtx.globalAlpha = 1.0;
+      drawCtx.lineCap = "round";
+      drawCtx.lineJoin = "round";
+
+      if (currentTool === "eraser") {
+        drawCtx.strokeStyle = "#ffffff"; // ONLY erases drawing layer
+        drawCtx.lineWidth = brushSize * 1.4;
+        return;
+      }
+
+      // drawing
+      drawCtx.strokeStyle = currentColor;
+      drawCtx.lineWidth = brushSize;
+
+      if (currentBrush === "dashed") {
+        drawCtx.setLineDash([brushSize * 1.5, brushSize * 1.2]);
+      } else if (currentBrush === "marker") {
+        drawCtx.globalAlpha = 0.6;
+        drawCtx.lineWidth = brushSize * 1.3;
+      } else if (currentBrush === "fuzzy") {
+        // main stroke normal, fuzzy effect handled in draw()
+      }
     }
 
     function draw(e) {
       e.preventDefault();
       if (!drawing) return;
+
       const pos = getPos(e);
 
-      ctx.lineWidth = brushSize;
-      ctx.lineCap = "round";
-      ctx.strokeStyle = (currentTool === "eraser") ? "#ffffff" : currentColor;
+      if (currentBrush === "fuzzy" && currentTool !== "eraser") {
+        // fuzzy effect: main line + two light offset lines
+        drawCtx.save();
+        drawCtx.setLineDash([]);
+        drawCtx.globalAlpha = 1.0;
+        drawCtx.lineWidth = brushSize;
+        drawCtx.strokeStyle = currentColor;
+        drawCtx.lineTo(pos.x, pos.y);
+        drawCtx.stroke();
+        drawCtx.beginPath();
+        drawCtx.moveTo(pos.x, pos.y);
 
-      ctx.lineTo(pos.x, pos.y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
+        drawCtx.globalAlpha = 0.3;
+        drawCtx.lineWidth = brushSize * 0.7;
+        drawCtx.lineTo(pos.x + 2, pos.y + 2);
+        drawCtx.stroke();
+        drawCtx.beginPath();
+        drawCtx.moveTo(pos.x + 2, pos.y + 2);
+
+        drawCtx.lineTo(pos.x - 2, pos.y - 2);
+        drawCtx.stroke();
+        drawCtx.beginPath();
+        drawCtx.moveTo(pos.x - 2, pos.y - 2);
+        drawCtx.restore();
+      } else {
+        // normal / dashed / marker / eraser
+        drawCtx.lineTo(pos.x, pos.y);
+        drawCtx.stroke();
+        drawCtx.beginPath();
+        drawCtx.moveTo(pos.x, pos.y);
+      }
     }
 
     function endDraw(e) {
       if (e) e.preventDefault();
       drawing = false;
-      ctx.beginPath();
+      drawCtx.beginPath();
     }
 
-    // --- Init page ---
+    // --- Init first page ---
     drawOutline(currentPage);
 
-    // --- Color buttons ---
+    // --- Colours ---
     const colorBtns = document.querySelectorAll(".color-btn");
     colorBtns.forEach(btn => {
       btn.addEventListener("click", () => {
@@ -317,10 +539,20 @@
         document.getElementById("penTool").classList.add("active");
         document.getElementById("eraserTool").classList.remove("active");
         document.getElementById("stickerTool").classList.remove("active");
-
         colorBtns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
+        document.getElementById("colorPicker").value = currentColor;
       });
+    });
+
+    const colorPicker = document.getElementById("colorPicker");
+    colorPicker.addEventListener("input", (e) => {
+      currentColor = e.target.value;
+      currentTool = "draw";
+      document.getElementById("penTool").classList.add("active");
+      document.getElementById("eraserTool").classList.remove("active");
+      document.getElementById("stickerTool").classList.remove("active");
+      colorBtns.forEach(b => b.classList.remove("active"));
     });
 
     // --- Brush sizes ---
@@ -329,6 +561,16 @@
       btn.addEventListener("click", () => {
         brushSize = parseInt(btn.dataset.size, 10);
         sizeBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+
+    // --- Brush types ---
+    const brushBtns = document.querySelectorAll(".brush-btn");
+    brushBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentBrush = btn.dataset.brush;
+        brushBtns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
       });
     });
@@ -383,30 +625,38 @@
       });
     });
 
-    // --- Clear button (keep outline) ---
+    // --- Clear (only drawing layer) ---
     document.getElementById("clear").addEventListener("click", () => {
-      drawOutline(currentPage);
+      clearDrawingLayer();
     });
 
-    // --- Save button ---
+    // --- Save: merge OUTLINE + DRAW into one image ---
     document.getElementById("save").addEventListener("click", () => {
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = outlineCanvas.width;
+      tempCanvas.height = outlineCanvas.height;
+      const tempCtx = tempCanvas.getContext("2d");
+
+      tempCtx.drawImage(outlineCanvas, 0, 0);
+      tempCtx.drawImage(drawCanvas, 0, 0);
+
       const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
+      link.href = tempCanvas.toDataURL("image/png");
       link.download = "my-coloring.png";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     });
 
-    // --- Canvas events (mouse + touch) ---
-    canvas.addEventListener("mousedown", startDraw);
-    canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", endDraw);
-    canvas.addEventListener("mouseleave", endDraw);
+    // --- Events (mouse + touch) ---
+    drawCanvas.addEventListener("mousedown", startDraw);
+    drawCanvas.addEventListener("mousemove", draw);
+    drawCanvas.addEventListener("mouseup", endDraw);
+    drawCanvas.addEventListener("mouseleave", endDraw);
 
-    canvas.addEventListener("touchstart", startDraw, { passive:false });
-    canvas.addEventListener("touchmove", draw, { passive:false });
-    canvas.addEventListener("touchend", endDraw, { passive:false });
+    drawCanvas.addEventListener("touchstart", startDraw, { passive:false });
+    drawCanvas.addEventListener("touchmove", draw, { passive:false });
+    drawCanvas.addEventListener("touchend", endDraw, { passive:false });
   </script>
 
 </body>
