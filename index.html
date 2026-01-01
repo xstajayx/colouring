@@ -84,6 +84,34 @@
       gap: 12px;
     }
 
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(220px, 260px) minmax(0, 1fr) minmax(220px, 260px);
+      grid-template-areas:
+        "pages pages pages"
+        "tools canvas colors";
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel-pages {
+      grid-area: pages;
+    }
+
+    .panel-tools {
+      grid-area: tools;
+    }
+
+    .panel-colors {
+      grid-area: colors;
+    }
+
+    .canvas-area {
+      grid-area: canvas;
+      display: flex;
+      justify-content: center;
+    }
+
     .section-title {
       display: flex;
       flex-direction: column;
@@ -106,10 +134,7 @@
       flex-wrap: wrap;
     }
 
-    #toolbar {
-      align-items: center;
-    }
-
+    #toolbar,
     #toolbar2 {
       align-items: center;
     }
@@ -253,6 +278,34 @@
       font-size: 12px;
       color: var(--muted);
     }
+
+    .panel-tools #toolbar2,
+    .panel-colors #toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .panel-colors .tool-btn {
+      justify-content: center;
+    }
+
+    @media (max-width: 980px) {
+      .workspace {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "pages"
+          "canvas"
+          "tools"
+          "colors";
+      }
+
+      .panel-tools #toolbar2,
+      .panel-colors #toolbar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+    }
   </style>
 </head>
 
@@ -267,87 +320,91 @@
       <div class="helper-note">Tip: Save your masterpiece when you're done!</div>
     </header>
 
-    <section class="panel">
-      <div class="section-title">
-        <h2>Color Palette</h2>
-        <span>Tap a swatch or use the picker for custom shades.</span>
-      </div>
-      <div id="toolbar">
-        <div class="color-btn active" style="background:#000000" data-color="#000000"></div>
-        <div class="color-btn" style="background:#ff4b4b" data-color="#ff4b4b"></div>
-        <div class="color-btn" style="background:#ff9a2f" data-color="#ff9a2f"></div>
-        <div class="color-btn" style="background:#ffd93b" data-color="#ffd93b"></div>
-        <div class="color-btn" style="background:#4caf50" data-color="#4caf50"></div>
-        <div class="color-btn" style="background:#2196f3" data-color="#2196f3"></div>
-        <div class="color-btn" style="background:#9c27b0" data-color="#9c27b0"></div>
-        <div class="color-btn" style="background:#ff6ec7" data-color="#ff6ec7"></div>
-        <div class="color-btn" style="background:#8d6e63" data-color="#8d6e63"></div>
-        <label class="tool-btn">
-          🎨
-          <input type="color" id="colorPicker" value="#000000" />
-        </label>
-      </div>
-    </section>
+    <div class="workspace">
+      <section class="panel panel-pages">
+        <div class="section-title">
+          <h2>Pick a Coloring Page</h2>
+          <span>Browse by category to find your next adventure.</span>
+        </div>
+        <div id="categories">
+          <button class="category-btn active" data-category="all">✨ All</button>
+          <button class="category-btn" data-category="animals">🐾 Animals</button>
+          <button class="category-btn" data-category="vehicles">🚗 Vehicles</button>
+          <button class="category-btn" data-category="shapes">🔷 Shapes</button>
+          <button class="category-btn" data-category="scenes">🌈 Scenes</button>
+          <button class="category-btn" data-category="blank">📝 Blank</button>
+        </div>
+        <div id="pages" class="page-grid">
+          <button class="page-btn active" data-page="catEasy" data-category="animals">🐱 Cat (Easy)</button>
+          <button class="page-btn" data-page="dinoHard" data-category="animals">🦕 Dino (Hard)</button>
+          <button class="page-btn" data-page="car" data-category="vehicles">🚗 Car</button>
+          <button class="page-btn" data-page="rocket" data-category="vehicles">🚀 Rocket</button>
+          <button class="page-btn" data-page="shapesEasy" data-category="shapes">🔵 Shapes (Easy)</button>
+          <button class="page-btn" data-page="shapesHard" data-category="shapes">🧩 Shapes (Challenge)</button>
+          <button class="page-btn" data-page="houseScene" data-category="scenes">🏡 House Scene</button>
+          <button class="page-btn" data-page="rainbowScene" data-category="scenes">🌈 Rainbow Scene</button>
+          <button class="page-btn" data-page="blank" data-category="blank">📝 Blank</button>
+        </div>
+      </section>
 
-    <section class="panel">
-      <div class="section-title">
-        <h2>Tools & Effects</h2>
-        <span>Switch between brushes, stickers, and erase mode.</span>
-      </div>
-      <div id="toolbar2">
-        <button class="tool-btn active" id="penTool">✏️ Draw</button>
-        <button class="tool-btn" id="eraserTool">🧽 Eraser</button>
+      <section class="panel panel-tools">
+        <div class="section-title">
+          <h2>Tools & Effects</h2>
+          <span>Switch between brushes, stickers, and erase mode.</span>
+        </div>
+        <div id="toolbar2">
+          <button class="tool-btn active" id="penTool">✏️ Draw</button>
+          <button class="tool-btn" id="eraserTool">🧽 Eraser</button>
 
-        <button class="size-btn active" data-size="4">S</button>
-        <button class="size-btn" data-size="8">M</button>
-        <button class="size-btn" data-size="14">L</button>
+          <button class="size-btn active" data-size="4">S</button>
+          <button class="size-btn" data-size="8">M</button>
+          <button class="size-btn" data-size="14">L</button>
 
-        <button class="brush-btn active" data-brush="normal">Smooth</button>
-        <button class="brush-btn" data-brush="dashed">Dashed</button>
-        <button class="brush-btn" data-brush="marker">Marker</button>
-        <button class="brush-btn" data-brush="fuzzy">Fuzzy</button>
+          <button class="brush-btn active" data-brush="normal">Smooth</button>
+          <button class="brush-btn" data-brush="dashed">Dashed</button>
+          <button class="brush-btn" data-brush="marker">Marker</button>
+          <button class="brush-btn" data-brush="fuzzy">Fuzzy</button>
 
-        <button class="sticker-btn" data-sticker="⭐">⭐</button>
-        <button class="sticker-btn" data-sticker="❤️">❤️</button>
-        <button class="sticker-btn" data-sticker="😊">😊</button>
-        <button class="tool-btn" id="stickerTool">🎉 Stickers</button>
+          <button class="sticker-btn" data-sticker="⭐">⭐</button>
+          <button class="sticker-btn" data-sticker="❤️">❤️</button>
+          <button class="sticker-btn" data-sticker="😊">😊</button>
+          <button class="tool-btn" id="stickerTool">🎉 Stickers</button>
 
-        <button class="tool-btn" id="save">💾 Save</button>
-        <button class="tool-btn" id="clear">🧼 Clear</button>
-      </div>
-    </section>
+          <button class="tool-btn" id="save">💾 Save</button>
+          <button class="tool-btn" id="clear">🧼 Clear</button>
+        </div>
+      </section>
 
-    <section class="panel">
-      <div class="section-title">
-        <h2>Pick a Coloring Page</h2>
-        <span>Browse by category to find your next adventure.</span>
+      <div class="canvas-area">
+        <div id="canvas-wrapper">
+          <div id="canvas-stack">
+            <canvas id="outlineCanvas" width="700" height="450"></canvas>
+            <canvas id="drawCanvas" width="700" height="450"></canvas>
+          </div>
+        </div>
       </div>
-      <div id="categories">
-        <button class="category-btn active" data-category="all">✨ All</button>
-        <button class="category-btn" data-category="animals">🐾 Animals</button>
-        <button class="category-btn" data-category="vehicles">🚗 Vehicles</button>
-        <button class="category-btn" data-category="shapes">🔷 Shapes</button>
-        <button class="category-btn" data-category="scenes">🌈 Scenes</button>
-        <button class="category-btn" data-category="blank">📝 Blank</button>
-      </div>
-      <div id="pages" class="page-grid">
-        <button class="page-btn active" data-page="catEasy" data-category="animals">🐱 Cat (Easy)</button>
-        <button class="page-btn" data-page="dinoHard" data-category="animals">🦕 Dino (Hard)</button>
-        <button class="page-btn" data-page="car" data-category="vehicles">🚗 Car</button>
-        <button class="page-btn" data-page="rocket" data-category="vehicles">🚀 Rocket</button>
-        <button class="page-btn" data-page="shapesEasy" data-category="shapes">🔵 Shapes (Easy)</button>
-        <button class="page-btn" data-page="shapesHard" data-category="shapes">🧩 Shapes (Challenge)</button>
-        <button class="page-btn" data-page="houseScene" data-category="scenes">🏡 House Scene</button>
-        <button class="page-btn" data-page="rainbowScene" data-category="scenes">🌈 Rainbow Scene</button>
-        <button class="page-btn" data-page="blank" data-category="blank">📝 Blank</button>
-      </div>
-    </section>
 
-    <div id="canvas-wrapper">
-      <div id="canvas-stack">
-        <canvas id="outlineCanvas" width="700" height="450"></canvas>
-        <canvas id="drawCanvas" width="700" height="450"></canvas>
-      </div>
+      <section class="panel panel-colors">
+        <div class="section-title">
+          <h2>Color Palette</h2>
+          <span>Tap a swatch or use the picker for custom shades.</span>
+        </div>
+        <div id="toolbar">
+          <div class="color-btn active" style="background:#000000" data-color="#000000"></div>
+          <div class="color-btn" style="background:#ff4b4b" data-color="#ff4b4b"></div>
+          <div class="color-btn" style="background:#ff9a2f" data-color="#ff9a2f"></div>
+          <div class="color-btn" style="background:#ffd93b" data-color="#ffd93b"></div>
+          <div class="color-btn" style="background:#4caf50" data-color="#4caf50"></div>
+          <div class="color-btn" style="background:#2196f3" data-color="#2196f3"></div>
+          <div class="color-btn" style="background:#9c27b0" data-color="#9c27b0"></div>
+          <div class="color-btn" style="background:#ff6ec7" data-color="#ff6ec7"></div>
+          <div class="color-btn" style="background:#8d6e63" data-color="#8d6e63"></div>
+          <label class="tool-btn">
+            🎨
+            <input type="color" id="colorPicker" value="#000000" />
+          </label>
+        </div>
+      </section>
     </div>
   </div>
 
