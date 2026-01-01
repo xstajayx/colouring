@@ -66,6 +66,97 @@ body {
   cursor: pointer;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.secondary {
+  border-radius: 14px;
+  padding: 10px 18px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  background: #f4f1ff;
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.1fr) minmax(280px, 0.9fr);
+  gap: 24px;
+}
+
+.intro-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f3efff 100%);
+  border-radius: 24px;
+  padding: 28px 32px;
+  box-shadow: 0 20px 40px rgba(37, 20, 79, 0.08);
+  border: 1px solid #ebe7ff;
+}
+
+.intro-card h2 {
+  margin: 0 0 12px;
+  font-size: 24px;
+}
+
+.intro-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.intro-tag {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: #fff;
+  border: 1px solid #efeaff;
+  color: var(--muted);
+}
+
+.intro-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--panel);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+.step span {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.step h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.step p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .layout {
   display: grid;
   grid-template-columns: minmax(240px, 280px) 1fr;
@@ -202,6 +293,36 @@ canvas {
   font-size: 14px;
 }
 
+.footer {
+  margin-top: auto;
+  background: var(--panel);
+  border-radius: 24px;
+  padding: 24px 32px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.footer h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.footer p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.footer .primary {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+}
+
 @media (max-width: 980px) {
   .layout {
     grid-template-columns: 1fr;
@@ -211,5 +332,14 @@ canvas {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
+  }
+
+  .intro {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
