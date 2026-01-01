@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#efe9ff" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect x="80" y="80" width="1040" height="470" rx="48" fill="#ffffff" stroke="#e1def2" stroke-width="4" />
+  <text x="140" y="210" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="64" fill="#1c1c28" font-weight="700">Digital Colouring Book</text>
+  <text x="140" y="290" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="32" fill="#6b6b7d">Templates · Palettes · Instant downloads</text>
+  <g transform="translate(140 360)">
+    <circle cx="30" cy="30" r="28" fill="#ff595e" />
+    <circle cx="110" cy="30" r="28" fill="#ffca3a" />
+    <circle cx="190" cy="30" r="28" fill="#8ac926" />
+    <circle cx="270" cy="30" r="28" fill="#1982c4" />
+    <circle cx="350" cy="30" r="28" fill="#6a4c93" />
+  </g>
+  <g stroke="#2c2c38" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(720 210)">
+    <path d="M120 60c-28-36-80-60-124-60-36 0-62 26-62 60 0 42 34 76 90 76 36 0 72-26 96-76z" />
+    <path d="M120 60c28-36 80-60 124-60 36 0 62 26 62 60 0 42-34 76-90 76-36 0-72-26-96-76z" />
+    <path d="M120 60c-18 44-18 96 0 140" />
+  </g>
+</svg>
