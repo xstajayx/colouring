@@ -216,16 +216,6 @@
       font-weight: bold;
     }
 
-    .page-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 8px;
-      border-radius: 16px;
-      background: #f8f6ff;
-      border: 1px dashed var(--outline);
-    }
-
     #canvas-wrapper {
       display: flex;
       justify-content: center;
@@ -292,6 +282,108 @@
       justify-content: center;
     }
 
+    #page-picker {
+      margin-block: 1.5rem 2rem;
+    }
+
+    .category-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .category-btn {
+      border: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: #f2f2ff;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+    }
+
+    .category-btn.is-active {
+      background: #7557ff;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .category-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .page-card {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0.6rem;
+      border-radius: 1rem;
+      border: 1px solid #e1e1ff;
+      background: #ffffff;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+    }
+
+    .page-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-color: #c0c0ff;
+    }
+
+    .page-thumb {
+      aspect-ratio: 4 / 3;
+      border-radius: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      background: #faf8ff;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    .page-info h3 {
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .badge-easy {
+      background: #e5ffe9;
+      border-color: #b4f3c0;
+    }
+
+    .badge-medium {
+      background: #fff8e6;
+      border-color: #ffe1a3;
+    }
+
+    .badge-hard {
+      background: #ffe6ea;
+      border-color: #ffb6c4;
+    }
+
     @media (max-width: 980px) {
       .workspace {
         grid-template-columns: 1fr;
@@ -325,34 +417,137 @@
 
     <div class="workspace">
       <section class="panel panel-pages">
-        <div class="section-title">
+        <section id="page-picker">
           <h2>Pick a Coloring Page</h2>
-          <span>Browse by category to find your next adventure.</span>
-        </div>
-        <div id="categories">
-          <button class="category-btn active" data-category="all">✨ All</button>
-          <button class="category-btn" data-category="animals">🐾 Animals</button>
-          <button class="category-btn" data-category="vehicles">🚗 Vehicles</button>
-          <button class="category-btn" data-category="shapes">🔷 Shapes</button>
-          <button class="category-btn" data-category="scenes">🌈 Scenes</button>
-          <button class="category-btn" data-category="teens">🧑‍🎤 Teens</button>
-          <button class="category-btn" data-category="blank">📝 Blank</button>
-        </div>
-        <div id="pages" class="page-grid">
-          <button class="page-btn active" data-page="catEasy" data-category="animals">🐱 Cat (Easy)</button>
-          <button class="page-btn" data-page="dinoHard" data-category="animals">🦕 Dino (Hard)</button>
-          <button class="page-btn" data-page="car" data-category="vehicles">🚗 Car</button>
-          <button class="page-btn" data-page="rocket" data-category="vehicles">🚀 Rocket</button>
-          <button class="page-btn" data-page="shapesEasy" data-category="shapes">🔵 Shapes (Easy)</button>
-          <button class="page-btn" data-page="shapesHard" data-category="shapes">🧩 Shapes (Challenge)</button>
-          <button class="page-btn" data-page="houseScene" data-category="scenes">🏡 House Scene</button>
-          <button class="page-btn" data-page="rainbowScene" data-category="scenes">🌈 Rainbow Scene</button>
-          <button class="page-btn" data-page="mandalaVibes" data-category="teens">🌀 Mandala Vibes</button>
-          <button class="page-btn" data-page="cityNight" data-category="teens">🌃 City Night</button>
-          <button class="page-btn" data-page="headphones" data-category="teens">🎧 Headphones</button>
-          <button class="page-btn" data-page="skateboard" data-category="teens">🛹 Skateboard</button>
-          <button class="page-btn" data-page="blank" data-category="blank">📝 Blank</button>
-        </div>
+
+          <div class="category-filters">
+            <button class="category-btn is-active" data-category="all">✨ All</button>
+            <button class="category-btn" data-category="animals">Animals</button>
+            <button class="category-btn" data-category="vehicles">Vehicles</button>
+            <button class="category-btn" data-category="shapes">Shapes</button>
+            <button class="category-btn" data-category="scenes">Scenes</button>
+            <button class="category-btn" data-category="teens">Teens</button>
+            <button class="category-btn" data-category="blank">Blank</button>
+          </div>
+
+          <div class="page-grid">
+            <!-- Animals -->
+            <button class="page-card"
+                    data-page-id="cat-easy"
+                    data-category="animals">
+              <div class="page-thumb placeholder-thumb">🐱</div>
+              <div class="page-info">
+                <h3>Cat</h3>
+                <span class="badge badge-easy">Easy</span>
+              </div>
+            </button>
+
+            <button class="page-card"
+                    data-page-id="dino-hard"
+                    data-category="animals">
+              <div class="page-thumb placeholder-thumb">🦕</div>
+              <div class="page-info">
+                <h3>Dino</h3>
+                <span class="badge badge-hard">Hard</span>
+              </div>
+            </button>
+
+            <!-- Vehicles -->
+            <button class="page-card"
+                    data-page-id="car"
+                    data-category="vehicles">
+              <div class="page-thumb placeholder-thumb">🚗</div>
+              <div class="page-info">
+                <h3>Car</h3>
+                <span class="badge badge-medium">Medium</span>
+              </div>
+            </button>
+
+            <button class="page-card"
+                    data-page-id="rocket"
+                    data-category="vehicles">
+              <div class="page-thumb placeholder-thumb">🚀</div>
+              <div class="page-info">
+                <h3>Rocket</h3>
+                <span class="badge badge-medium">Medium</span>
+              </div>
+            </button>
+
+            <!-- Shapes -->
+            <button class="page-card"
+                    data-page-id="shapes-easy"
+                    data-category="shapes">
+              <div class="page-thumb placeholder-thumb">🔺</div>
+              <div class="page-info">
+                <h3>Shapes (Easy)</h3>
+                <span class="badge badge-easy">Easy</span>
+              </div>
+            </button>
+
+            <button class="page-card"
+                    data-page-id="shapes-challenge"
+                    data-category="shapes">
+              <div class="page-thumb placeholder-thumb">🧩</div>
+              <div class="page-info">
+                <h3>Shapes (Challenge)</h3>
+                <span class="badge badge-hard">Challenge</span>
+              </div>
+            </button>
+
+            <!-- Scenes -->
+            <button class="page-card"
+                    data-page-id="house-scene"
+                    data-category="scenes">
+              <div class="page-thumb placeholder-thumb">🏠</div>
+              <div class="page-info">
+                <h3>House Scene</h3>
+                <span class="badge badge-medium">Scene</span>
+              </div>
+            </button>
+
+            <button class="page-card"
+                    data-page-id="rainbow-scene"
+                    data-category="scenes">
+              <div class="page-thumb placeholder-thumb">🌈</div>
+              <div class="page-info">
+                <h3>Rainbow Scene</h3>
+                <span class="badge badge-easy">Fun</span>
+              </div>
+            </button>
+
+            <!-- Teens / Mandala -->
+            <button class="page-card"
+                    data-page-id="mandala-vibes"
+                    data-category="teens">
+              <div class="page-thumb placeholder-thumb">🌀</div>
+              <div class="page-info">
+                <h3>Mandala Vibes</h3>
+                <span class="badge badge-hard">Detail</span>
+              </div>
+            </button>
+
+            <button class="page-card"
+                    data-page-id="city-night"
+                    data-category="teens">
+              <div class="page-thumb placeholder-thumb">🌃</div>
+              <div class="page-info">
+                <h3>City Night</h3>
+                <span class="badge badge-medium">Teens</span>
+              </div>
+            </button>
+
+            <!-- Blank -->
+            <button class="page-card"
+                    data-page-id="blank"
+                    data-category="blank">
+              <div class="page-thumb placeholder-thumb">✏️</div>
+              <div class="page-info">
+                <h3>Blank Canvas</h3>
+                <span class="badge badge-easy">Free Draw</span>
+              </div>
+            </button>
+          </div>
+        </section>
       </section>
 
       <section class="panel panel-tools">
@@ -1091,45 +1286,49 @@
       });
     });
 
-    // --- Pages ---
-    const pageBtns = document.querySelectorAll(".page-btn");
-    pageBtns.forEach(btn => {
+    // Update this to match your real loader function:
+    function loadColoringPage(pageId) {
+      const pageMap = {
+        "cat-easy": "catEasy",
+        "dino-hard": "dinoHard",
+        "shapes-easy": "shapesEasy",
+        "shapes-challenge": "shapesHard",
+        "house-scene": "houseScene",
+        "rainbow-scene": "rainbowScene",
+        "mandala-vibes": "mandalaVibes",
+        "city-night": "cityNight"
+      };
+
+      const mappedPage = pageMap[pageId] || pageId;
+      currentPage = mappedPage;
+      drawOutline(mappedPage);
+      console.log("Load page:", pageId);
+    }
+
+    // Filtering by category
+    const categoryButtons = document.querySelectorAll(".category-btn");
+    const pageCards = document.querySelectorAll(".page-card");
+
+    categoryButtons.forEach(btn => {
       btn.addEventListener("click", () => {
-        currentPage = btn.dataset.page;
-        pageBtns.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        drawOutline(currentPage);
+        const category = btn.dataset.category;
+
+        categoryButtons.forEach(b => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+
+        pageCards.forEach(card => {
+          const cardCategory = card.dataset.category;
+          const show = category === "all" || cardCategory === category;
+          card.style.display = show ? "" : "none";
+        });
       });
     });
 
-    // --- Categories ---
-    const categoryBtns = document.querySelectorAll(".category-btn");
-
-    function updateCategory(category) {
-      categoryBtns.forEach(btn => btn.classList.remove("active"));
-      document.querySelector(`.category-btn[data-category="${category}"]`).classList.add("active");
-
-      let firstVisible = null;
-
-      pageBtns.forEach(btn => {
-        const matches = category === "all" || btn.dataset.category === category;
-        btn.style.display = matches ? "inline-flex" : "none";
-        if (matches && !firstVisible) {
-          firstVisible = btn;
-        }
-      });
-
-      if (firstVisible && !firstVisible.classList.contains("active")) {
-        pageBtns.forEach(b => b.classList.remove("active"));
-        firstVisible.classList.add("active");
-        currentPage = firstVisible.dataset.page;
-        drawOutline(currentPage);
-      }
-    }
-
-    categoryBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        updateCategory(btn.dataset.category);
+    // Click a card to load that page
+    pageCards.forEach(card => {
+      card.addEventListener("click", () => {
+        const pageId = card.dataset.pageId;
+        loadColoringPage(pageId);
       });
     });
 
