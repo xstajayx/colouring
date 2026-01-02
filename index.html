@@ -401,191 +401,262 @@
         justify-content: flex-start;
       }
     }
+
+    body {
+      align-items: stretch;
+      padding: 0;
+    }
+
+    .app {
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #eee;
+      background: #fff;
+    }
+
+    .app-header h1 {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    #change-picture-btn {
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.85rem;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    #change-picture-btn:hover {
+      background: #f0f0ff;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      padding: 0.4rem 0.6rem;
+      border-bottom: 1px solid #eee;
+      background: #fafafa;
+    }
+
+    .toolbar button {
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.85rem;
+      background: #fff;
+      cursor: pointer;
+      box-shadow: none;
+      transition: background 0.12s ease;
+    }
+
+    .toolbar button:hover {
+      background: #f0f0ff;
+    }
+
+    .toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toolbar .color-btn,
+    .toolbar .size-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      justify-content: center;
+    }
+
+    .toolbar .color-btn {
+      border-radius: 50%;
+    }
+
+    .toolbar .tool-btn,
+    .toolbar .brush-btn,
+    .toolbar .shape-btn,
+    .toolbar .sticker-btn {
+      border-radius: 999px;
+    }
+
+    .app-main {
+      max-width: 1100px;
+      margin: 0.5rem auto 1.5rem;
+      padding: 0 0.5rem;
+      width: 100%;
+    }
+
+    .canvas-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: min(70vh, 700px);
+    }
+
+    #canvas-stack {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      width: min(100%, 1000px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .category-filters {
+      gap: 0.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .category-btn {
+      padding: 0.3rem 0.7rem;
+      font-size: 0.8rem;
+    }
+
+    .page-grid {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.4rem;
+      overflow: auto;
+      padding-top: 0.4rem;
+    }
+
+    .page-card {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+      padding: 0.4rem 0.5rem;
+      border-radius: 0.6rem;
+      background: #fafafa;
+      font-size: 0.85rem;
+    }
+
+    .page-thumb {
+      font-size: 1.3rem;
+      margin: 0;
+    }
+
+    .page-info {
+      width: 100%;
+    }
+
+    .page-info h3 {
+      font-size: 0.85rem;
+    }
+
+    .badge {
+      font-size: 0.65rem;
+    }
+
+    .page-picker-panel {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .page-picker-panel.is-open {
+      display: flex;
+    }
+
+    .page-picker-content {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1rem;
+      width: min(90vw, 700px);
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-picker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-picker-header h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .page-picker-header button {
+      border: none;
+      background: transparent;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
   <div class="app">
-    <header class="hero">
-      <div>
-        <span class="badge">🎨 Creative play</span>
-        <h1>Coloring Studio</h1>
-        <p>Pick a category, choose a page, and start coloring with pro-level tools.</p>
-      </div>
-      <div class="helper-note">Tip: Try line tools and fill to speed up shading!</div>
+    <header class="app-header">
+      <h1>Colouring</h1>
+      <button id="change-picture-btn" type="button">Change picture</button>
     </header>
 
-    <div class="workspace">
-      <section class="panel panel-pages">
-        <section id="page-picker">
-          <h2>Pick a Coloring Page</h2>
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="tool-btn active" id="penTool">🖌️ Brush</button>
+        <button class="tool-btn" id="lineTool">📏 Line</button>
+        <button class="tool-btn" id="shapeTool">🔺 Shapes</button>
+        <button class="tool-btn" id="fillTool">🪣 Fill</button>
+        <button class="tool-btn" id="eraserTool">🧽 Eraser</button>
+        <button class="tool-btn" id="stickerTool">⭐ Stickers</button>
+        <button class="tool-btn" id="save">💾 Save</button>
+        <button class="tool-btn" id="clear">🧼 Clear</button>
+      </div>
+      <div class="toolbar-group">
+        <button class="size-btn active" data-size="4">S</button>
+        <button class="size-btn" data-size="8">M</button>
+        <button class="size-btn" data-size="14">L</button>
 
-          <div class="category-filters">
-            <button class="category-btn is-active" data-category="all">✨ All</button>
-            <button class="category-btn" data-category="animals">Animals</button>
-            <button class="category-btn" data-category="vehicles">Vehicles</button>
-            <button class="category-btn" data-category="shapes">Shapes</button>
-            <button class="category-btn" data-category="scenes">Scenes</button>
-            <button class="category-btn" data-category="teens">Teens</button>
-            <button class="category-btn" data-category="blank">Blank</button>
-          </div>
+        <button class="brush-btn active" data-brush="normal">Smooth</button>
+        <button class="brush-btn" data-brush="dashed">Dashed</button>
+        <button class="brush-btn" data-brush="marker">Marker</button>
+        <button class="brush-btn" data-brush="fuzzy">Fuzzy</button>
 
-          <div class="page-grid">
-            <!-- Animals -->
-            <button class="page-card"
-                    data-page-id="cat-easy"
-                    data-category="animals">
-              <div class="page-thumb placeholder-thumb">🐱</div>
-              <div class="page-info">
-                <h3>Cat</h3>
-                <span class="badge badge-easy">Easy</span>
-              </div>
-            </button>
+        <button class="shape-btn active" data-shape="rectangle">⬛</button>
+        <button class="shape-btn" data-shape="circle">⚪</button>
+        <button class="shape-btn" data-shape="triangle">🔺</button>
 
-            <button class="page-card"
-                    data-page-id="dino-hard"
-                    data-category="animals">
-              <div class="page-thumb placeholder-thumb">🦕</div>
-              <div class="page-info">
-                <h3>Dino</h3>
-                <span class="badge badge-hard">Hard</span>
-              </div>
-            </button>
+        <button class="sticker-btn" data-sticker="⭐">⭐</button>
+        <button class="sticker-btn" data-sticker="❤️">❤️</button>
+        <button class="sticker-btn" data-sticker="😊">😊</button>
+      </div>
+      <div class="toolbar-group" id="toolbar">
+        <div class="color-btn active" style="background:#000000" data-color="#000000"></div>
+        <div class="color-btn" style="background:#ff4b4b" data-color="#ff4b4b"></div>
+        <div class="color-btn" style="background:#ff9a2f" data-color="#ff9a2f"></div>
+        <div class="color-btn" style="background:#ffd93b" data-color="#ffd93b"></div>
+        <div class="color-btn" style="background:#4caf50" data-color="#4caf50"></div>
+        <div class="color-btn" style="background:#2196f3" data-color="#2196f3"></div>
+        <div class="color-btn" style="background:#9c27b0" data-color="#9c27b0"></div>
+        <div class="color-btn" style="background:#ff6ec7" data-color="#ff6ec7"></div>
+        <div class="color-btn" style="background:#8d6e63" data-color="#8d6e63"></div>
+        <label class="tool-btn">
+          🎨
+          <input type="color" id="colorPicker" value="#000000" />
+        </label>
+      </div>
+    </div>
 
-            <!-- Vehicles -->
-            <button class="page-card"
-                    data-page-id="car"
-                    data-category="vehicles">
-              <div class="page-thumb placeholder-thumb">🚗</div>
-              <div class="page-info">
-                <h3>Car</h3>
-                <span class="badge badge-medium">Medium</span>
-              </div>
-            </button>
-
-            <button class="page-card"
-                    data-page-id="rocket"
-                    data-category="vehicles">
-              <div class="page-thumb placeholder-thumb">🚀</div>
-              <div class="page-info">
-                <h3>Rocket</h3>
-                <span class="badge badge-medium">Medium</span>
-              </div>
-            </button>
-
-            <!-- Shapes -->
-            <button class="page-card"
-                    data-page-id="shapes-easy"
-                    data-category="shapes">
-              <div class="page-thumb placeholder-thumb">🔺</div>
-              <div class="page-info">
-                <h3>Shapes (Easy)</h3>
-                <span class="badge badge-easy">Easy</span>
-              </div>
-            </button>
-
-            <button class="page-card"
-                    data-page-id="shapes-challenge"
-                    data-category="shapes">
-              <div class="page-thumb placeholder-thumb">🧩</div>
-              <div class="page-info">
-                <h3>Shapes (Challenge)</h3>
-                <span class="badge badge-hard">Challenge</span>
-              </div>
-            </button>
-
-            <!-- Scenes -->
-            <button class="page-card"
-                    data-page-id="house-scene"
-                    data-category="scenes">
-              <div class="page-thumb placeholder-thumb">🏠</div>
-              <div class="page-info">
-                <h3>House Scene</h3>
-                <span class="badge badge-medium">Scene</span>
-              </div>
-            </button>
-
-            <button class="page-card"
-                    data-page-id="rainbow-scene"
-                    data-category="scenes">
-              <div class="page-thumb placeholder-thumb">🌈</div>
-              <div class="page-info">
-                <h3>Rainbow Scene</h3>
-                <span class="badge badge-easy">Fun</span>
-              </div>
-            </button>
-
-            <!-- Teens / Mandala -->
-            <button class="page-card"
-                    data-page-id="mandala-vibes"
-                    data-category="teens">
-              <div class="page-thumb placeholder-thumb">🌀</div>
-              <div class="page-info">
-                <h3>Mandala Vibes</h3>
-                <span class="badge badge-hard">Detail</span>
-              </div>
-            </button>
-
-            <button class="page-card"
-                    data-page-id="city-night"
-                    data-category="teens">
-              <div class="page-thumb placeholder-thumb">🌃</div>
-              <div class="page-info">
-                <h3>City Night</h3>
-                <span class="badge badge-medium">Teens</span>
-              </div>
-            </button>
-
-            <!-- Blank -->
-            <button class="page-card"
-                    data-page-id="blank"
-                    data-category="blank">
-              <div class="page-thumb placeholder-thumb">✏️</div>
-              <div class="page-info">
-                <h3>Blank Canvas</h3>
-                <span class="badge badge-easy">Free Draw</span>
-              </div>
-            </button>
-          </div>
-        </section>
-      </section>
-
-      <section class="panel panel-tools">
-        <div class="section-title">
-          <h2>Tools & Effects</h2>
-          <span>Switch between brushes, stickers, and erase mode.</span>
-        </div>
-        <div id="toolbar2">
-          <button class="tool-btn active" id="penTool">✏️ Draw</button>
-          <button class="tool-btn" id="lineTool">📏 Line</button>
-          <button class="tool-btn" id="shapeTool">🔺 Shapes</button>
-          <button class="tool-btn" id="fillTool">🪣 Fill</button>
-          <button class="tool-btn" id="eraserTool">🧽 Eraser</button>
-
-          <button class="size-btn active" data-size="4">S</button>
-          <button class="size-btn" data-size="8">M</button>
-          <button class="size-btn" data-size="14">L</button>
-
-          <button class="brush-btn active" data-brush="normal">Smooth</button>
-          <button class="brush-btn" data-brush="dashed">Dashed</button>
-          <button class="brush-btn" data-brush="marker">Marker</button>
-          <button class="brush-btn" data-brush="fuzzy">Fuzzy</button>
-
-          <button class="shape-btn active" data-shape="rectangle">⬛</button>
-          <button class="shape-btn" data-shape="circle">⚪</button>
-          <button class="shape-btn" data-shape="triangle">🔺</button>
-
-          <button class="sticker-btn" data-sticker="⭐">⭐</button>
-          <button class="sticker-btn" data-sticker="❤️">❤️</button>
-          <button class="sticker-btn" data-sticker="😊">😊</button>
-          <button class="tool-btn" id="stickerTool">🎉 Stickers</button>
-
-          <button class="tool-btn" id="save">💾 Save</button>
-          <button class="tool-btn" id="clear">🧼 Clear</button>
-        </div>
-      </section>
-
-      <div class="canvas-area">
+    <main class="app-main">
+      <div class="canvas-wrapper">
         <div id="canvas-wrapper">
           <div id="canvas-stack">
             <canvas id="outlineCanvas" width="900" height="580"></canvas>
@@ -593,28 +664,143 @@
           </div>
         </div>
       </div>
+    </main>
+  </div>
 
-      <section class="panel panel-colors">
-        <div class="section-title">
-          <h2>Color Palette</h2>
-          <span>Tap a swatch or use the picker for custom shades.</span>
-        </div>
-        <div id="toolbar">
-          <div class="color-btn active" style="background:#000000" data-color="#000000"></div>
-          <div class="color-btn" style="background:#ff4b4b" data-color="#ff4b4b"></div>
-          <div class="color-btn" style="background:#ff9a2f" data-color="#ff9a2f"></div>
-          <div class="color-btn" style="background:#ffd93b" data-color="#ffd93b"></div>
-          <div class="color-btn" style="background:#4caf50" data-color="#4caf50"></div>
-          <div class="color-btn" style="background:#2196f3" data-color="#2196f3"></div>
-          <div class="color-btn" style="background:#9c27b0" data-color="#9c27b0"></div>
-          <div class="color-btn" style="background:#ff6ec7" data-color="#ff6ec7"></div>
-          <div class="color-btn" style="background:#8d6e63" data-color="#8d6e63"></div>
-          <label class="tool-btn">
-            🎨
-            <input type="color" id="colorPicker" value="#000000" />
-          </label>
-        </div>
-      </section>
+  <div id="page-picker-panel" class="page-picker-panel">
+    <div class="page-picker-content">
+      <header class="page-picker-header">
+        <h2>Choose a picture</h2>
+        <button id="close-page-picker" type="button">✕</button>
+      </header>
+
+      <div class="category-filters">
+        <button class="category-btn is-active" data-category="all">✨ All</button>
+        <button class="category-btn" data-category="animals">Animals</button>
+        <button class="category-btn" data-category="vehicles">Vehicles</button>
+        <button class="category-btn" data-category="shapes">Shapes</button>
+        <button class="category-btn" data-category="scenes">Scenes</button>
+        <button class="category-btn" data-category="teens">Teens</button>
+        <button class="category-btn" data-category="blank">Blank</button>
+      </div>
+
+      <div class="page-grid">
+        <!-- Animals -->
+        <button class="page-card"
+                data-page-id="cat-easy"
+                data-category="animals">
+          <div class="page-thumb placeholder-thumb">🐱</div>
+          <div class="page-info">
+            <h3>Cat</h3>
+            <span class="badge badge-easy">Easy</span>
+          </div>
+        </button>
+
+        <button class="page-card"
+                data-page-id="dino-hard"
+                data-category="animals">
+          <div class="page-thumb placeholder-thumb">🦕</div>
+          <div class="page-info">
+            <h3>Dino</h3>
+            <span class="badge badge-hard">Hard</span>
+          </div>
+        </button>
+
+        <!-- Vehicles -->
+        <button class="page-card"
+                data-page-id="car"
+                data-category="vehicles">
+          <div class="page-thumb placeholder-thumb">🚗</div>
+          <div class="page-info">
+            <h3>Car</h3>
+            <span class="badge badge-medium">Medium</span>
+          </div>
+        </button>
+
+        <button class="page-card"
+                data-page-id="rocket"
+                data-category="vehicles">
+          <div class="page-thumb placeholder-thumb">🚀</div>
+          <div class="page-info">
+            <h3>Rocket</h3>
+            <span class="badge badge-medium">Medium</span>
+          </div>
+        </button>
+
+        <!-- Shapes -->
+        <button class="page-card"
+                data-page-id="shapes-easy"
+                data-category="shapes">
+          <div class="page-thumb placeholder-thumb">🔺</div>
+          <div class="page-info">
+            <h3>Shapes (Easy)</h3>
+            <span class="badge badge-easy">Easy</span>
+          </div>
+        </button>
+
+        <button class="page-card"
+                data-page-id="shapes-challenge"
+                data-category="shapes">
+          <div class="page-thumb placeholder-thumb">🧩</div>
+          <div class="page-info">
+            <h3>Shapes (Challenge)</h3>
+            <span class="badge badge-hard">Challenge</span>
+          </div>
+        </button>
+
+        <!-- Scenes -->
+        <button class="page-card"
+                data-page-id="house-scene"
+                data-category="scenes">
+          <div class="page-thumb placeholder-thumb">🏠</div>
+          <div class="page-info">
+            <h3>House Scene</h3>
+            <span class="badge badge-medium">Scene</span>
+          </div>
+        </button>
+
+        <button class="page-card"
+                data-page-id="rainbow-scene"
+                data-category="scenes">
+          <div class="page-thumb placeholder-thumb">🌈</div>
+          <div class="page-info">
+            <h3>Rainbow Scene</h3>
+            <span class="badge badge-easy">Fun</span>
+          </div>
+        </button>
+
+        <!-- Teens / Mandala -->
+        <button class="page-card"
+                data-page-id="mandala-vibes"
+                data-category="teens">
+          <div class="page-thumb placeholder-thumb">🌀</div>
+          <div class="page-info">
+            <h3>Mandala Vibes</h3>
+            <span class="badge badge-hard">Detail</span>
+          </div>
+        </button>
+
+        <button class="page-card"
+                data-page-id="city-night"
+                data-category="teens">
+          <div class="page-thumb placeholder-thumb">🌃</div>
+          <div class="page-info">
+            <h3>City Night</h3>
+            <span class="badge badge-medium">Teens</span>
+          </div>
+        </button>
+
+        <!-- Blank -->
+        <button class="page-card"
+                data-page-id="blank"
+                data-category="blank">
+          <div class="page-thumb placeholder-thumb">✏️</div>
+          <div class="page-info">
+            <h3>Blank Canvas</h3>
+            <span class="badge badge-easy">Free Draw</span>
+          </div>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1286,6 +1472,34 @@
       });
     });
 
+    const openPickerBtn = document.getElementById("change-picture-btn");
+    const pickerPanel = document.getElementById("page-picker-panel");
+    const closePickerBtn = document.getElementById("close-page-picker");
+
+    function openPicker() {
+      pickerPanel.classList.add("is-open");
+    }
+
+    function closePicker() {
+      pickerPanel.classList.remove("is-open");
+    }
+
+    if (openPickerBtn) {
+      openPickerBtn.addEventListener("click", openPicker);
+    }
+
+    if (closePickerBtn) {
+      closePickerBtn.addEventListener("click", closePicker);
+    }
+
+    if (pickerPanel) {
+      pickerPanel.addEventListener("click", (e) => {
+        if (e.target === pickerPanel) {
+          closePicker();
+        }
+      });
+    }
+
     // Update this to match your real loader function:
     function loadColoringPage(pageId) {
       const pageMap = {
@@ -1302,6 +1516,7 @@
       const mappedPage = pageMap[pageId] || pageId;
       currentPage = mappedPage;
       drawOutline(mappedPage);
+      closePicker();
       console.log("Load page:", pageId);
     }
 
