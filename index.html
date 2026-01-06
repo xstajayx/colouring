@@ -25,8 +25,8 @@
       font-family: "Inter", "Segoe UI", system-ui, sans-serif;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 24px;
+      align-items: stretch;
+      padding: 0;
       margin: 0;
       color: var(--ink);
     }
@@ -224,15 +224,15 @@
 
     #canvas-stack {
       position: relative;
-      border: 5px solid #ddd;
-      border-radius: 16px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
       overflow: hidden;
       background: white;
       touch-action: none;
       max-width: 100%;
-      width: min(900px, 100%);
+      width: min(100%, 1000px);
       aspect-ratio: 700 / 450;
-      box-shadow: 0 18px 40px rgba(35, 24, 90, 0.12);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     }
 
     #outlineCanvas,
@@ -411,11 +411,6 @@
       }
     }
 
-    body {
-      align-items: stretch;
-      padding: 0;
-    }
-
     .app {
       width: 100%;
       min-height: 100vh;
@@ -526,12 +521,6 @@
       height: min(70vh, 700px);
     }
 
-    #canvas-stack {
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      width: min(100%, 1000px);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
 
     .category-filters {
       gap: 0.4rem;
@@ -1004,6 +993,8 @@
     const drawCanvas = document.getElementById("drawCanvas");
     const outlineCtx = outlineCanvas.getContext("2d");
     const drawCtx = drawCanvas.getContext("2d");
+    const undoButton = document.getElementById("undo");
+    const redoButton = document.getElementById("redo");
 
     let drawing = false;
     let currentColor = "#000000";
@@ -1875,8 +1866,6 @@
     const eraserTool = document.getElementById("eraserTool");
     const stickerTool = document.getElementById("stickerTool");
     const mirrorToggle = document.getElementById("mirrorToggle");
-    const undoButton = document.getElementById("undo");
-    const redoButton = document.getElementById("redo");
     const stickerBtns = document.querySelectorAll(".sticker-btn");
 
     const toolButtons = [penTool, lineTool, shapeTool, fillTool, eraserTool, stickerTool];
@@ -2172,6 +2161,7 @@
     }
 
     setFeaturedDrop(popCultureDrops[0]);
+    tickUpdates();
     setInterval(tickUpdates, 1000);
     updateHistoryButtons();
 
