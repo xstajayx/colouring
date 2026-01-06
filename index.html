@@ -245,6 +245,15 @@
       max-width: 100%;
     }
 
+    #drawCanvas {
+      z-index: 1;
+    }
+
+    #outlineCanvas {
+      z-index: 2;
+      pointer-events: none;
+    }
+
     /* Make canvas responsive */
     @media (max-width: 750px) {
       #outlineCanvas,
@@ -427,16 +436,22 @@
     }
 
     #change-picture-btn {
-      border: 1px solid #ddd;
+      border: none;
       border-radius: 999px;
-      padding: 0.3rem 0.9rem;
-      font-size: 0.85rem;
-      background: #fff;
+      padding: 0.45rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: #fff;
       cursor: pointer;
+      box-shadow: 0 8px 16px rgba(123, 92, 255, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     #change-picture-btn:hover {
-      background: #f0f0ff;
+      background: #6b4bff;
     }
 
     .toolbar {
@@ -626,6 +641,8 @@
     .update-hub-title {
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
     }
 
     .update-hub-title h2 {
@@ -634,8 +651,13 @@
     }
 
     .update-meta {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: #efeaff;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
     }
 
     .update-grid {
@@ -695,7 +717,7 @@
   <div class="app">
     <header class="app-header">
       <h1>Colouring</h1>
-      <button id="change-picture-btn" type="button">Change picture</button>
+      <button id="change-picture-btn" type="button">🖼️ Choose picture</button>
     </header>
 
     <div class="toolbar">
@@ -731,6 +753,13 @@
         <button class="sticker-btn" data-sticker="⭐">⭐</button>
         <button class="sticker-btn" data-sticker="❤️">❤️</button>
         <button class="sticker-btn" data-sticker="😊">😊</button>
+        <button class="sticker-btn" data-sticker="🌈">🌈</button>
+        <button class="sticker-btn" data-sticker="🦄">🦄</button>
+        <button class="sticker-btn" data-sticker="🧁">🧁</button>
+        <button class="sticker-btn" data-sticker="🎈">🎈</button>
+        <button class="sticker-btn" data-sticker="⚽️">⚽️</button>
+        <button class="sticker-btn" data-sticker="🦋">🦋</button>
+        <button class="sticker-btn" data-sticker="🍀">🍀</button>
       </div>
       <div class="toolbar-group" id="toolbar">
         <div class="color-btn active" style="background:#000000" data-color="#000000"></div>
@@ -753,8 +782,8 @@
       <section class="update-hub" aria-live="polite">
         <div class="update-hub-header">
           <div class="update-hub-title">
-            <h2>Pop Culture Update Hub</h2>
             <div class="update-meta" id="next-update">Next drop in 00:45</div>
+            <h2>Pop Culture Update Hub</h2>
           </div>
           <div class="featured-drop" id="featured-drop">
             <div class="drop-emoji">🎬</div>
@@ -783,8 +812,8 @@
       <div class="canvas-wrapper">
         <div id="canvas-wrapper">
           <div id="canvas-stack">
-            <canvas id="outlineCanvas" width="900" height="580"></canvas>
             <canvas id="drawCanvas" width="900" height="580"></canvas>
+            <canvas id="outlineCanvas" width="900" height="580"></canvas>
           </div>
         </div>
       </div>
@@ -1435,7 +1464,8 @@
       if (currentTool === "sticker") {
         pushHistory();
         drawCtx.save();
-        drawCtx.font = "48px Arial";
+        const stickerSize = Math.min(96, Math.max(24, brushSize * 6));
+        drawCtx.font = `${stickerSize}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif`;
         drawCtx.textAlign = "center";
         drawCtx.textBaseline = "middle";
         drawCtx.fillText(currentSticker, pos.x, pos.y);
@@ -1576,8 +1606,8 @@
       tempCanvas.width = width;
       tempCanvas.height = height;
       const tempCtx = tempCanvas.getContext("2d");
-      tempCtx.drawImage(outlineCanvas, 0, 0);
       tempCtx.drawImage(drawCanvas, 0, 0);
+      tempCtx.drawImage(outlineCanvas, 0, 0);
 
       const merged = tempCtx.getImageData(0, 0, width, height);
       const drawData = drawCtx.getImageData(0, 0, width, height);
@@ -2029,7 +2059,14 @@
     ];
 
     let dropIndex = 0;
-    let nextDropAt = Date.now() + 45000;
+
+    function getNextMidnight() {
+      const next = new Date();
+      next.setHours(24, 0, 0, 0);
+      return next.getTime();
+    }
+
+    let nextDropAt = getNextMidnight();
 
     function addUpdateCard(drop) {
       const card = document.createElement("div");
@@ -2076,17 +2113,16 @@
 
     function tickUpdates() {
       const remaining = Math.max(0, nextDropAt - Date.now());
-      const seconds = Math.floor(remaining / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const displaySeconds = String(seconds % 60).padStart(2, "0");
-      nextUpdateLabel.textContent = `Next drop in ${String(minutes).padStart(2, "0")}:${displaySeconds}`;
+      const hours = Math.floor(remaining / 3600000);
+      const minutes = Math.floor((remaining % 3600000) / 60000);
+      nextUpdateLabel.textContent = `Next drop in ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
       if (remaining === 0) {
         const drop = popCultureDrops[dropIndex % popCultureDrops.length];
         dropIndex += 1;
         addUpdateCard(drop);
         addAutoPage(drop);
         setFeaturedDrop(drop);
-        nextDropAt = Date.now() + 45000;
+        nextDropAt = getNextMidnight();
       }
     }
 
