@@ -1024,17 +1024,15 @@
     // --- Helpers: coordinates ---
     function getPos(e) {
       const rect = drawCanvas.getBoundingClientRect();
-      if (e.touches && e.touches[0]) {
-        return {
-          x: (e.touches[0].clientX - rect.left) * (drawCanvas.width / rect.width),
-          y: (e.touches[0].clientY - rect.top) * (drawCanvas.height / rect.height)
-        };
-      } else {
-        return {
-          x: (e.clientX - rect.left) * (drawCanvas.width / rect.width),
-          y: (e.clientY - rect.top) * (drawCanvas.height / rect.height)
-        };
-      }
+      const touchPoint =
+        (e.touches && e.touches[0]) ||
+        (e.changedTouches && e.changedTouches[0]);
+      const clientX = touchPoint ? touchPoint.clientX : e.clientX;
+      const clientY = touchPoint ? touchPoint.clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * (drawCanvas.width / rect.width),
+        y: (clientY - rect.top) * (drawCanvas.height / rect.height)
+      };
     }
 
     const baseCanvasWidth = 700;
