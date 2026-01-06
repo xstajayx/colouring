@@ -1039,6 +1039,23 @@
     const baseCanvasHeight = 450;
 
     // --- Draw page outlines on OUTLINE canvas only ---
+    function addRoundedRect(ctx, x, y, width, height, radius) {
+      if (ctx.roundRect) {
+        ctx.roundRect(x, y, width, height, radius);
+        return;
+      }
+      const r = Math.min(radius, width / 2, height / 2);
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + width - r, y);
+      ctx.arcTo(x + width, y, x + width, y + r, r);
+      ctx.lineTo(x + width, y + height - r);
+      ctx.arcTo(x + width, y + height, x + width - r, y + height, r);
+      ctx.lineTo(x + r, y + height);
+      ctx.arcTo(x, y + height, x, y + height - r, r);
+      ctx.lineTo(x, y + r);
+      ctx.arcTo(x, y, x + r, y, r);
+    }
+
     function drawOutline(page) {
       const scaleX = outlineCanvas.width / baseCanvasWidth;
       const scaleY = outlineCanvas.height / baseCanvasHeight;
@@ -1285,8 +1302,8 @@
         outlineCtx.arc(420, 70, 5, 0, Math.PI * 2);
       } else if (page === "spaceSaga") {
         // spaceship body
-        outlineCtx.roundRect(150, 160, 400, 140, 70);
-        outlineCtx.roundRect(220, 130, 260, 80, 40);
+        addRoundedRect(outlineCtx, 150, 160, 400, 140, 70);
+        addRoundedRect(outlineCtx, 220, 130, 260, 80, 40);
         outlineCtx.moveTo(220, 230);
         outlineCtx.lineTo(150, 300);
         outlineCtx.lineTo(210, 300);
@@ -1342,13 +1359,13 @@
         outlineCtx.arc(120, 110, 5, 0, Math.PI * 2);
       } else if (page === "heroTech") {
         // hangar
-        outlineCtx.roundRect(120, 170, 460, 200, 24);
+        addRoundedRect(outlineCtx, 120, 170, 460, 200, 24);
         outlineCtx.moveTo(120, 220);
         outlineCtx.lineTo(580, 220);
         outlineCtx.moveTo(120, 270);
         outlineCtx.lineTo(580, 270);
         // mech silhouette
-        outlineCtx.roundRect(280, 190, 120, 140, 20);
+        addRoundedRect(outlineCtx, 280, 190, 120, 140, 20);
         outlineCtx.moveTo(300, 190);
         outlineCtx.lineTo(300, 150);
         outlineCtx.lineTo(380, 150);
@@ -1366,7 +1383,7 @@
         outlineCtx.lineTo(545, 320);
       } else if (page === "retroArcade") {
         // arcade cabinet
-        outlineCtx.roundRect(220, 120, 220, 280, 24);
+        addRoundedRect(outlineCtx, 220, 120, 220, 280, 24);
         outlineCtx.rect(250, 150, 160, 120);
         outlineCtx.moveTo(250, 290);
         outlineCtx.lineTo(410, 290);
@@ -1395,8 +1412,8 @@
         outlineCtx.moveTo(240, 220);
         outlineCtx.arc(350, 220, 110, Math.PI, 2 * Math.PI);
         // ear pads
-        outlineCtx.roundRect(190, 210, 60, 140, 20);
-        outlineCtx.roundRect(450, 210, 60, 140, 20);
+        addRoundedRect(outlineCtx, 190, 210, 60, 140, 20);
+        addRoundedRect(outlineCtx, 450, 210, 60, 140, 20);
         // speaker detail
         outlineCtx.moveTo(220, 250);
         outlineCtx.arc(220, 280, 18, 0, Math.PI * 2);
@@ -1406,7 +1423,7 @@
         outlineCtx.moveTo(350, 360);
         outlineCtx.quadraticCurveTo(370, 400, 400, 420);
       } else if (page === "skateboard") {
-        outlineCtx.roundRect(160, 210, 380, 80, 40);
+        addRoundedRect(outlineCtx, 160, 210, 380, 80, 40);
         outlineCtx.moveTo(220, 290);
         outlineCtx.arc(220, 310, 30, 0, Math.PI * 2);
         outlineCtx.moveTo(480, 290);
