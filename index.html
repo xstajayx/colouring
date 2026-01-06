@@ -464,6 +464,12 @@
       background: #f0f0ff;
     }
 
+    .toolbar button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f4f4f8;
+    }
+
     .toolbar-group {
       display: flex;
       flex-wrap: wrap;
@@ -599,6 +605,89 @@
       font-size: 1.1rem;
       cursor: pointer;
     }
+
+    .update-hub {
+      display: grid;
+      gap: 0.75rem;
+      border-radius: 1rem;
+      border: 1px solid #e9e5ff;
+      background: #faf8ff;
+      padding: 0.75rem 1rem;
+    }
+
+    .update-hub-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .update-hub-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .update-hub-title h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .update-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .update-grid {
+      display: grid;
+      gap: 0.6rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .update-card {
+      background: #ffffff;
+      border-radius: 0.8rem;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #e0dcff;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .update-card strong {
+      font-size: 0.9rem;
+    }
+
+    .update-card span {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .featured-drop {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-radius: 0.8rem;
+      padding: 0.6rem 0.8rem;
+      background: #ffffff;
+      border: 1px dashed #c5baff;
+    }
+
+    .featured-drop .drop-emoji {
+      font-size: 1.6rem;
+    }
+
+    .featured-drop p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .tool-hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -617,8 +706,12 @@
         <button class="tool-btn" id="fillTool">🪣 Fill</button>
         <button class="tool-btn" id="eraserTool">🧽 Eraser</button>
         <button class="tool-btn" id="stickerTool">⭐ Stickers</button>
+        <button class="tool-btn" id="mirrorToggle">🪞 Mirror</button>
+        <button class="tool-btn" id="undo">↩️ Undo</button>
+        <button class="tool-btn" id="redo">↪️ Redo</button>
         <button class="tool-btn" id="save">💾 Save</button>
         <button class="tool-btn" id="clear">🧼 Clear</button>
+        <button class="tool-btn" id="surprisePalette">🎲 Surprise Palette</button>
       </div>
       <div class="toolbar-group">
         <button class="size-btn active" data-size="4">S</button>
@@ -629,6 +722,7 @@
         <button class="brush-btn" data-brush="dashed">Dashed</button>
         <button class="brush-btn" data-brush="marker">Marker</button>
         <button class="brush-btn" data-brush="fuzzy">Fuzzy</button>
+        <button class="brush-btn" data-brush="spray">Spray</button>
 
         <button class="shape-btn active" data-shape="rectangle">⬛</button>
         <button class="shape-btn" data-shape="circle">⚪</button>
@@ -656,6 +750,36 @@
     </div>
 
     <main class="app-main">
+      <section class="update-hub" aria-live="polite">
+        <div class="update-hub-header">
+          <div class="update-hub-title">
+            <h2>Pop Culture Update Hub</h2>
+            <div class="update-meta" id="next-update">Next drop in 00:45</div>
+          </div>
+          <div class="featured-drop" id="featured-drop">
+            <div class="drop-emoji">🎬</div>
+            <div>
+              <strong>Featured: Retro Arcade Quest</strong>
+              <p>Pixel vibes, neon lights, and bonus zones.</p>
+            </div>
+          </div>
+        </div>
+        <div class="update-grid" id="update-feed">
+          <div class="update-card">
+            <strong>New today: Hero Tech Hangar</strong>
+            <span>Detailed gadgets, glowing panels, and launch pads.</span>
+          </div>
+          <div class="update-card">
+            <strong>Trending: Fantasy Academy</strong>
+            <span>Library towers, magical pets, and spell books.</span>
+          </div>
+          <div class="update-card">
+            <strong>Coming soon: Space Saga Cruiser</strong>
+            <span>Hyperdrive, starports, and epic bridges.</span>
+          </div>
+        </div>
+      </section>
+      <p class="tool-hint">Tip: Try Mirror mode for symmetrical designs, or use Spray for glittery textures.</p>
       <div class="canvas-wrapper">
         <div id="canvas-wrapper">
           <div id="canvas-stack">
@@ -680,6 +804,7 @@
         <button class="category-btn" data-category="vehicles">Vehicles</button>
         <button class="category-btn" data-category="shapes">Shapes</button>
         <button class="category-btn" data-category="scenes">Scenes</button>
+        <button class="category-btn" data-category="pop">Pop Culture</button>
         <button class="category-btn" data-category="teens">Teens</button>
         <button class="category-btn" data-category="blank">Blank</button>
       </div>
@@ -790,6 +915,47 @@
           </div>
         </button>
 
+        <!-- Pop culture -->
+        <button class="page-card"
+                data-page-id="space-saga"
+                data-category="pop">
+          <div class="page-thumb placeholder-thumb">🚀</div>
+          <div class="page-info">
+            <h3>Space Saga Cruiser</h3>
+            <span class="badge badge-hard">Epic</span>
+          </div>
+        </button>
+
+        <button class="page-card"
+                data-page-id="fantasy-academy"
+                data-category="pop">
+          <div class="page-thumb placeholder-thumb">🧙</div>
+          <div class="page-info">
+            <h3>Fantasy Academy</h3>
+            <span class="badge badge-medium">Magical</span>
+          </div>
+        </button>
+
+        <button class="page-card"
+                data-page-id="hero-tech"
+                data-category="pop">
+          <div class="page-thumb placeholder-thumb">🦾</div>
+          <div class="page-info">
+            <h3>Hero Tech Hangar</h3>
+            <span class="badge badge-hard">Gear</span>
+          </div>
+        </button>
+
+        <button class="page-card"
+                data-page-id="retro-arcade"
+                data-category="pop">
+          <div class="page-thumb placeholder-thumb">🕹️</div>
+          <div class="page-info">
+            <h3>Retro Arcade Quest</h3>
+            <span class="badge badge-medium">Neon</span>
+          </div>
+        </button>
+
         <!-- Blank -->
         <button class="page-card"
                 data-page-id="blank"
@@ -820,6 +986,11 @@
     let currentShape = "rectangle";
     let shapeStart = null;
     let drawingSnapshot = null;
+    let mirrorMode = false;
+    let undoStack = [];
+    let redoStack = [];
+    const maxHistory = 25;
+    let lastPos = null;
 
     // --- Helpers: coordinates ---
     function getPos(e) {
@@ -1085,6 +1256,111 @@
         outlineCtx.arc(320, 90, 4, 0, Math.PI * 2);
         outlineCtx.moveTo(420, 70);
         outlineCtx.arc(420, 70, 5, 0, Math.PI * 2);
+      } else if (page === "spaceSaga") {
+        // spaceship body
+        outlineCtx.roundRect(150, 160, 400, 140, 70);
+        outlineCtx.roundRect(220, 130, 260, 80, 40);
+        outlineCtx.moveTo(220, 230);
+        outlineCtx.lineTo(150, 300);
+        outlineCtx.lineTo(210, 300);
+        outlineCtx.moveTo(480, 230);
+        outlineCtx.lineTo(550, 300);
+        outlineCtx.lineTo(490, 300);
+        // windows
+        for (let i = 0; i < 5; i++) {
+          outlineCtx.moveTo(230 + i * 60, 230);
+          outlineCtx.arc(230 + i * 60, 230, 18, 0, Math.PI * 2);
+        }
+        // star field
+        for (let i = 0; i < 14; i++) {
+          const x = 80 + (i * 40) % 560;
+          const y = 60 + (i * 35) % 90;
+          outlineCtx.moveTo(x + 4, y);
+          outlineCtx.arc(x, y, 4, 0, Math.PI * 2);
+        }
+      } else if (page === "fantasyAcademy") {
+        // towers
+        outlineCtx.rect(130, 170, 120, 200);
+        outlineCtx.rect(270, 140, 160, 230);
+        outlineCtx.rect(450, 190, 90, 180);
+        // roofs
+        outlineCtx.moveTo(130, 170);
+        outlineCtx.lineTo(190, 110);
+        outlineCtx.lineTo(250, 170);
+        outlineCtx.closePath();
+        outlineCtx.moveTo(270, 140);
+        outlineCtx.lineTo(350, 80);
+        outlineCtx.lineTo(430, 140);
+        outlineCtx.closePath();
+        outlineCtx.moveTo(450, 190);
+        outlineCtx.lineTo(495, 140);
+        outlineCtx.lineTo(540, 190);
+        outlineCtx.closePath();
+        // banner + windows
+        outlineCtx.moveTo(250, 240);
+        outlineCtx.lineTo(430, 240);
+        outlineCtx.moveTo(260, 240);
+        outlineCtx.lineTo(260, 280);
+        outlineCtx.moveTo(420, 240);
+        outlineCtx.lineTo(420, 280);
+        for (let x = 160; x <= 500; x += 60) {
+          outlineCtx.rect(x, 210, 30, 40);
+        }
+        // owl
+        outlineCtx.moveTo(110, 110);
+        outlineCtx.arc(110, 110, 20, 0, Math.PI * 2);
+        outlineCtx.moveTo(100, 110);
+        outlineCtx.arc(100, 110, 5, 0, Math.PI * 2);
+        outlineCtx.moveTo(120, 110);
+        outlineCtx.arc(120, 110, 5, 0, Math.PI * 2);
+      } else if (page === "heroTech") {
+        // hangar
+        outlineCtx.roundRect(120, 170, 460, 200, 24);
+        outlineCtx.moveTo(120, 220);
+        outlineCtx.lineTo(580, 220);
+        outlineCtx.moveTo(120, 270);
+        outlineCtx.lineTo(580, 270);
+        // mech silhouette
+        outlineCtx.roundRect(280, 190, 120, 140, 20);
+        outlineCtx.moveTo(300, 190);
+        outlineCtx.lineTo(300, 150);
+        outlineCtx.lineTo(380, 150);
+        outlineCtx.lineTo(380, 190);
+        outlineCtx.moveTo(280, 250);
+        outlineCtx.lineTo(240, 290);
+        outlineCtx.moveTo(400, 250);
+        outlineCtx.lineTo(440, 290);
+        // control panels
+        outlineCtx.rect(150, 300, 60, 40);
+        outlineCtx.rect(500, 300, 60, 40);
+        outlineCtx.moveTo(165, 320);
+        outlineCtx.lineTo(195, 320);
+        outlineCtx.moveTo(515, 320);
+        outlineCtx.lineTo(545, 320);
+      } else if (page === "retroArcade") {
+        // arcade cabinet
+        outlineCtx.roundRect(220, 120, 220, 280, 24);
+        outlineCtx.rect(250, 150, 160, 120);
+        outlineCtx.moveTo(250, 290);
+        outlineCtx.lineTo(410, 290);
+        // joystick + buttons
+        outlineCtx.moveTo(290, 330);
+        outlineCtx.arc(290, 330, 14, 0, Math.PI * 2);
+        outlineCtx.moveTo(320, 330);
+        outlineCtx.lineTo(320, 300);
+        outlineCtx.moveTo(360, 330);
+        outlineCtx.arc(360, 330, 12, 0, Math.PI * 2);
+        outlineCtx.moveTo(390, 330);
+        outlineCtx.arc(390, 330, 12, 0, Math.PI * 2);
+        // neon stars
+        for (let i = 0; i < 6; i++) {
+          const x = 120 + i * 90;
+          const y = 90 + (i % 2) * 30;
+          outlineCtx.moveTo(x, y);
+          outlineCtx.lineTo(x + 10, y + 20);
+          outlineCtx.lineTo(x - 10, y + 20);
+          outlineCtx.closePath();
+        }
       } else if (page === "headphones") {
         // headband
         outlineCtx.moveTo(200, 220);
@@ -1129,28 +1405,60 @@
       drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
     }
 
+    function pushHistory() {
+      if (undoStack.length >= maxHistory) {
+        undoStack.shift();
+      }
+      undoStack.push(drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height));
+      redoStack = [];
+      updateHistoryButtons();
+    }
+
+    function restoreFromStack(stackFrom, stackTo) {
+      if (!stackFrom.length) return;
+      stackTo.push(drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height));
+      const imageData = stackFrom.pop();
+      drawCtx.putImageData(imageData, 0, 0);
+      updateHistoryButtons();
+    }
+
+    function updateHistoryButtons() {
+      undoButton.disabled = undoStack.length === 0;
+      redoButton.disabled = redoStack.length === 0;
+    }
+
     // --- Drawing & stickers on DRAW canvas only ---
     function startDraw(e) {
       e.preventDefault();
       const pos = getPos(e);
 
       if (currentTool === "sticker") {
+        pushHistory();
         drawCtx.save();
         drawCtx.font = "48px Arial";
         drawCtx.textAlign = "center";
         drawCtx.textBaseline = "middle";
         drawCtx.fillText(currentSticker, pos.x, pos.y);
+        if (mirrorMode) {
+          drawCtx.fillText(currentSticker, drawCanvas.width - pos.x, pos.y);
+        }
         drawCtx.restore();
         return;
       }
 
       if (currentTool === "fill") {
+        pushHistory();
         floodFill(Math.floor(pos.x), Math.floor(pos.y), currentColor);
+        if (mirrorMode) {
+          floodFill(Math.floor(drawCanvas.width - pos.x), Math.floor(pos.y), currentColor);
+        }
         return;
       }
 
       drawing = true;
       shapeStart = pos;
+      lastPos = pos;
+      pushHistory();
       drawingSnapshot =
         currentTool === "line" || currentTool === "shape"
           ? drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height)
@@ -1184,6 +1492,9 @@
         drawCtx.lineWidth = brushSize * 1.3;
       } else if (currentBrush === "fuzzy") {
         // main stroke normal, fuzzy effect handled in draw()
+      } else if (currentBrush === "spray") {
+        drawCtx.globalAlpha = 0.6;
+        drawCtx.lineWidth = 1;
       }
     }
 
@@ -1211,6 +1522,27 @@
       }
 
       drawCtx.stroke();
+      if (mirrorMode) {
+        drawCtx.beginPath();
+        if (currentTool === "line") {
+          drawCtx.moveTo(drawCanvas.width - shapeStart.x, shapeStart.y);
+          drawCtx.lineTo(drawCanvas.width - pos.x, pos.y);
+        } else if (currentShape === "rectangle") {
+          const width = pos.x - shapeStart.x;
+          const height = pos.y - shapeStart.y;
+          drawCtx.rect(drawCanvas.width - shapeStart.x - width, shapeStart.y, width, height);
+        } else if (currentShape === "circle") {
+          const radius = Math.hypot(pos.x - shapeStart.x, pos.y - shapeStart.y);
+          drawCtx.arc(drawCanvas.width - shapeStart.x, shapeStart.y, radius, 0, Math.PI * 2);
+        } else if (currentShape === "triangle") {
+          const midpointX = (shapeStart.x + pos.x) / 2;
+          drawCtx.moveTo(drawCanvas.width - midpointX, shapeStart.y);
+          drawCtx.lineTo(drawCanvas.width - pos.x, pos.y);
+          drawCtx.lineTo(drawCanvas.width - shapeStart.x, pos.y);
+          drawCtx.closePath();
+        }
+        drawCtx.stroke();
+      }
       if (finalize) {
         drawCtx.closePath();
       }
@@ -1308,6 +1640,25 @@
         return;
       }
 
+      if (currentBrush === "spray" && currentTool !== "eraser") {
+        const density = Math.max(8, brushSize * 2);
+        for (let i = 0; i < density; i++) {
+          const offsetX = (Math.random() - 0.5) * brushSize * 2;
+          const offsetY = (Math.random() - 0.5) * brushSize * 2;
+          drawCtx.fillStyle = currentColor;
+          drawCtx.beginPath();
+          drawCtx.arc(pos.x + offsetX, pos.y + offsetY, Math.max(1, brushSize / 6), 0, Math.PI * 2);
+          drawCtx.fill();
+          if (mirrorMode) {
+            drawCtx.beginPath();
+            drawCtx.arc(drawCanvas.width - pos.x + offsetX, pos.y + offsetY, Math.max(1, brushSize / 6), 0, Math.PI * 2);
+            drawCtx.fill();
+          }
+        }
+        lastPos = pos;
+        return;
+      }
+
       if (currentBrush === "fuzzy" && currentTool !== "eraser") {
         // fuzzy effect: main line + two light offset lines
         drawCtx.save();
@@ -1332,13 +1683,43 @@
         drawCtx.beginPath();
         drawCtx.moveTo(pos.x - 2, pos.y - 2);
         drawCtx.restore();
+        if (mirrorMode) {
+          drawCtx.save();
+          drawCtx.setLineDash([]);
+          drawCtx.globalAlpha = 1.0;
+          drawCtx.lineWidth = brushSize;
+          drawCtx.strokeStyle = currentColor;
+          drawCtx.beginPath();
+          drawCtx.moveTo(drawCanvas.width - lastPos.x, lastPos.y);
+          drawCtx.lineTo(drawCanvas.width - pos.x, pos.y);
+          drawCtx.stroke();
+          drawCtx.globalAlpha = 0.3;
+          drawCtx.lineWidth = brushSize * 0.7;
+          drawCtx.beginPath();
+          drawCtx.moveTo(drawCanvas.width - lastPos.x + 2, lastPos.y + 2);
+          drawCtx.lineTo(drawCanvas.width - pos.x + 2, pos.y + 2);
+          drawCtx.stroke();
+          drawCtx.beginPath();
+          drawCtx.moveTo(drawCanvas.width - lastPos.x - 2, lastPos.y - 2);
+          drawCtx.lineTo(drawCanvas.width - pos.x - 2, pos.y - 2);
+          drawCtx.stroke();
+          drawCtx.restore();
+        }
       } else {
         // normal / dashed / marker / eraser
         drawCtx.lineTo(pos.x, pos.y);
         drawCtx.stroke();
         drawCtx.beginPath();
         drawCtx.moveTo(pos.x, pos.y);
+        if (mirrorMode) {
+          drawCtx.beginPath();
+          drawCtx.moveTo(drawCanvas.width - lastPos.x, lastPos.y);
+          drawCtx.lineTo(drawCanvas.width - pos.x, pos.y);
+          drawCtx.stroke();
+        }
       }
+
+      lastPos = pos;
     }
 
     function endDraw(e) {
@@ -1351,6 +1732,7 @@
       drawing = false;
       shapeStart = null;
       drawingSnapshot = null;
+      lastPos = null;
       drawCtx.beginPath();
     }
 
@@ -1417,6 +1799,9 @@
     const fillTool = document.getElementById("fillTool");
     const eraserTool = document.getElementById("eraserTool");
     const stickerTool = document.getElementById("stickerTool");
+    const mirrorToggle = document.getElementById("mirrorToggle");
+    const undoButton = document.getElementById("undo");
+    const redoButton = document.getElementById("redo");
     const stickerBtns = document.querySelectorAll(".sticker-btn");
 
     const toolButtons = [penTool, lineTool, shapeTool, fillTool, eraserTool, stickerTool];
@@ -1472,6 +1857,19 @@
       });
     });
 
+    mirrorToggle.addEventListener("click", () => {
+      mirrorMode = !mirrorMode;
+      mirrorToggle.classList.toggle("active", mirrorMode);
+    });
+
+    undoButton.addEventListener("click", () => {
+      restoreFromStack(undoStack, redoStack);
+    });
+
+    redoButton.addEventListener("click", () => {
+      restoreFromStack(redoStack, undoStack);
+    });
+
     const openPickerBtn = document.getElementById("change-picture-btn");
     const pickerPanel = document.getElementById("page-picker-panel");
     const closePickerBtn = document.getElementById("close-page-picker");
@@ -1510,7 +1908,11 @@
         "house-scene": "houseScene",
         "rainbow-scene": "rainbowScene",
         "mandala-vibes": "mandalaVibes",
-        "city-night": "cityNight"
+        "city-night": "cityNight",
+        "space-saga": "spaceSaga",
+        "fantasy-academy": "fantasyAcademy",
+        "hero-tech": "heroTech",
+        "retro-arcade": "retroArcade"
       };
 
       const mappedPage = pageMap[pageId] || pageId;
@@ -1549,6 +1951,7 @@
 
     // --- Clear (only drawing layer) ---
     document.getElementById("clear").addEventListener("click", () => {
+      pushHistory();
       clearDrawingLayer();
     });
 
@@ -1569,6 +1972,127 @@
       link.click();
       document.body.removeChild(link);
     });
+
+    const surprisePaletteBtn = document.getElementById("surprisePalette");
+    const paletteColors = [
+      ["#2f2f2f", "#ff6f61", "#ffb347", "#ffe66d", "#6bd4ff", "#7b5cff", "#caffbf", "#ffadad", "#ffd6a5"],
+      ["#0f172a", "#38bdf8", "#a855f7", "#f472b6", "#facc15", "#22c55e", "#f97316", "#e2e8f0", "#94a3b8"],
+      ["#1b1b1f", "#ff4d6d", "#f9c74f", "#90be6d", "#43aa8b", "#577590", "#f94144", "#f3722c", "#277da1"]
+    ];
+
+    surprisePaletteBtn.addEventListener("click", () => {
+      const colors = paletteColors[Math.floor(Math.random() * paletteColors.length)];
+      const swatches = document.querySelectorAll(".color-btn");
+      swatches.forEach((swatch, index) => {
+        const color = colors[index % colors.length];
+        swatch.dataset.color = color;
+        swatch.style.background = color;
+      });
+      currentColor = colors[0];
+      document.getElementById("colorPicker").value = currentColor;
+      colorBtns.forEach(b => b.classList.remove("active"));
+      swatches[0].classList.add("active");
+    });
+
+    const updateFeed = document.getElementById("update-feed");
+    const featuredDrop = document.getElementById("featured-drop");
+    const nextUpdateLabel = document.getElementById("next-update");
+    const popCultureDrops = [
+      {
+        title: "Space Saga Cruiser",
+        detail: "Star bridges, navigation pods, and panoramic decks.",
+        emoji: "🛰️",
+        pageId: "space-saga",
+        difficulty: "Epic"
+      },
+      {
+        title: "Fantasy Academy",
+        detail: "Spellbound towers, magical pets, and secret doors.",
+        emoji: "📚",
+        pageId: "fantasy-academy",
+        difficulty: "Magical"
+      },
+      {
+        title: "Hero Tech Hangar",
+        detail: "Power suits, command panels, and launch gear.",
+        emoji: "🦾",
+        pageId: "hero-tech",
+        difficulty: "Gear"
+      },
+      {
+        title: "Retro Arcade Quest",
+        detail: "Neon cabinets, pixel quests, and bonus lives.",
+        emoji: "🕹️",
+        pageId: "retro-arcade",
+        difficulty: "Neon"
+      }
+    ];
+
+    let dropIndex = 0;
+    let nextDropAt = Date.now() + 45000;
+
+    function addUpdateCard(drop) {
+      const card = document.createElement("div");
+      card.className = "update-card";
+      const title = document.createElement("strong");
+      title.textContent = `New drop: ${drop.title}`;
+      const detail = document.createElement("span");
+      detail.textContent = drop.detail;
+      card.append(title, detail);
+      updateFeed.prepend(card);
+    }
+
+    function setFeaturedDrop(drop) {
+      featuredDrop.innerHTML = `
+        <div class="drop-emoji">${drop.emoji}</div>
+        <div>
+          <strong>Featured: ${drop.title}</strong>
+          <p>${drop.detail}</p>
+        </div>
+      `;
+    }
+
+    function addAutoPage(drop) {
+      const existing = document.querySelector(`.page-card[data-page-id="${drop.pageId}"]`);
+      if (existing) {
+        return;
+      }
+      const card = document.createElement("button");
+      card.className = "page-card";
+      card.dataset.pageId = drop.pageId;
+      card.dataset.category = "pop";
+      card.innerHTML = `
+        <div class="page-thumb placeholder-thumb">${drop.emoji}</div>
+        <div class="page-info">
+          <h3>${drop.title}</h3>
+          <span class="badge badge-medium">${drop.difficulty}</span>
+        </div>
+      `;
+      card.addEventListener("click", () => {
+        loadColoringPage(drop.pageId);
+      });
+      document.querySelector(".page-grid").prepend(card);
+    }
+
+    function tickUpdates() {
+      const remaining = Math.max(0, nextDropAt - Date.now());
+      const seconds = Math.floor(remaining / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const displaySeconds = String(seconds % 60).padStart(2, "0");
+      nextUpdateLabel.textContent = `Next drop in ${String(minutes).padStart(2, "0")}:${displaySeconds}`;
+      if (remaining === 0) {
+        const drop = popCultureDrops[dropIndex % popCultureDrops.length];
+        dropIndex += 1;
+        addUpdateCard(drop);
+        addAutoPage(drop);
+        setFeaturedDrop(drop);
+        nextDropAt = Date.now() + 45000;
+      }
+    }
+
+    setFeaturedDrop(popCultureDrops[0]);
+    setInterval(tickUpdates, 1000);
+    updateHistoryButtons();
 
     // --- Events (mouse + touch) ---
     drawCanvas.addEventListener("mousedown", startDraw);
