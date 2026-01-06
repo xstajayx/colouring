@@ -1056,7 +1056,7 @@
       ctx.arcTo(x, y, x + r, y, r);
     }
 
-    function drawOutline(page) {
+    function drawOutline(page, { clearDrawing = true } = {}) {
       const scaleX = outlineCanvas.width / baseCanvasWidth;
       const scaleY = outlineCanvas.height / baseCanvasHeight;
 
@@ -1442,7 +1442,9 @@
       outlineCtx.restore();
 
       // important: clear children’s drawing layer when page changes
-      clearDrawingLayer();
+      if (clearDrawing) {
+        clearDrawingLayer();
+      }
     }
 
     function clearDrawingLayer() {
@@ -1781,8 +1783,36 @@
       drawCtx.beginPath();
     }
 
+    function resizeCanvases() {
+      const rect = drawCanvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
+      const ratio = window.devicePixelRatio || 1;
+      const targetWidth = Math.round(rect.width * ratio);
+      const targetHeight = Math.round(rect.height * ratio);
+
+      if (drawCanvas.width === targetWidth && drawCanvas.height === targetHeight) {
+        return;
+      }
+
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = drawCanvas.width;
+      tempCanvas.height = drawCanvas.height;
+      tempCanvas.getContext("2d").drawImage(drawCanvas, 0, 0);
+
+      drawCanvas.width = targetWidth;
+      drawCanvas.height = targetHeight;
+      outlineCanvas.width = targetWidth;
+      outlineCanvas.height = targetHeight;
+
+      drawCtx.drawImage(tempCanvas, 0, 0, targetWidth, targetHeight);
+      drawOutline(currentPage, { clearDrawing: false });
+    }
+
+    window.addEventListener("resize", resizeCanvases);
+
     // --- Init first page ---
-    drawOutline(currentPage);
+    resizeCanvases();
 
     // --- Colours ---
     const colorBtns = document.querySelectorAll(".color-btn");
